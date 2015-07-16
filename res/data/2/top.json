@@ -1,0 +1,12 @@
+{
+    "wall-1" : {
+        "size" : { "x" : 480, "y" : 160 },
+        "z" : 160,
+        "image" : "images/static/w1.png"
+    },
+    "wall-2" : {
+        "size" : { "x" : 480, "y" : 160 },
+        "z" : 160,
+        "image" : "images/static/w2.png"
+    }
+}

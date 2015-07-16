@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Editor</title>
+        <style type="text/css">
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            overflow: scroll;
+            background-color: #343434;
+            font-family: arial, verdana;
+            font-size: 14px;
+            color: #ffffff;
+            -webkit-user-select: none;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            overflow: scroll;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            width: calc(100% - 20px);
+            height: calc(100% - 20px);
+            margin: 10px;
+            padding: 10px;
+            background-color: #ffffff;
+            border: 1px solid #000000;
+            color: #000000;
+            box-sizing: border-box;
+        }
+        .popup-panel {
+            width: 100%;
+            left: 0;
+            top: 0;
+            padding: 0 0 10px 0;
+            box-sizing: border-box;
+        }
+        #ground-container,
+        #wall-container,
+        #active-container,
+        #static-container,
+        #event-container,
+        #top-container {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        #ground-container {
+            background-color: #000000;
+        }
+        #ground-container img {
+            position: absolute;
+            cursor: pointer;
+        }
+        #active-container div {
+            position: absolute;
+            cursor: pointer;
+        }
+        #static-container div {
+            position: absolute;
+            cursor: pointer;
+        }
+        #top-container img {
+            position: absolute;
+            cursor: pointer;
+        }
+        #event-container div {
+            position: absolute;
+            overflow: hidden;
+            padding: 2px;
+            background-color: rgba(0, 255, 0, 0.5);
+            color: #ffffff;
+            font-size: 11px;
+            cursor: pointer;
+            box-sizing: border-box;
+        }
+        #wall-container div {
+            position: absolute;
+            background-color: #ff0000;
+            opacity: 0.5;
+            cursor: pointer;
+        }
+        #main-panel {
+            position: fixed;
+            overflow: hidden;
+            width: 100%;
+            padding: 10px 10px 0 10px;
+            background-color: #f6f6f6;
+            color: #000000;
+        }
+        #main-panel.top {
+            top : 0;
+            border-bottom: 1px solid #000000;
+        }
+        #main-panel.bottom {
+            bottom: 0;
+            border-top: 1px solid #000000;
+        }
+        .row {
+            overflow: hidden;
+            padding-bottom: 10px;
+        }
+        .inline-button {
+            display: inline-block;
+            margin: 0 3px 0 0;
+            padding: 3px 6px 3px 6px;
+            background-color: #252525;
+            color: #ffffff;
+            cursor: pointer;
+            border-radius: 7px;
+            box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+        }
+        #save-map {
+            background-color: #004395;
+        }
+        #change-size {
+            background-color: #004395;
+        }
+        #load-data {
+            background-color: #004395;
+        }
+        #change-main-panel-location {
+            background-color: #004395;
+        }
+        #change-delete-mode {
+            background-color: #a50000;
+        }
+        #hide-ground-images-popup,
+        #hide-active-objects-popup,
+        #hide-static-objects-popup,
+        #hide-top-objects-popup,
+        #hide-events-popup {
+            background-color: #a50000;
+        }
+        #show-ground-container,
+        #show-active-container,
+        #show-static-container,
+        #show-top-container,
+        #show-event-container,
+        #show-wall-container {
+            background-color: #008500;
+        }
+        .ground-image {
+            position: relative;
+            float: left;
+            overflow: hidden;
+            width: 200px;
+            height: 250px;
+            margin: 0 10px 10px 0;
+            background-color: #f5f5f5;
+            background-repeat: no-repeat;
+            background-size: 100%;
+            background-position: center;
+            border: 1px solid #000000;
+            cursor: pointer;
+        }
+        .ground-image .inline-button {
+            position: absolute;
+            right: 5px;
+            bottom: 5px;
+            margin: 0;
+            background-color: #a50000;
+            border: 1px solid #ffffff;
+        }
+        .active-object {
+            position: relative;
+            float: left;
+            overflow: hidden;
+            width: 200px;
+            height: 250px;
+            margin: 0 10px 10px 0;
+            background-color: #f5f5f5;
+            background-repeat: no-repeat;
+            background-size: 100%;
+            background-position: center;
+            border: 1px solid #000000;
+            cursor: pointer;
+        }
+        .active-object .label {
+            display: inline-block;
+            padding: 3px 6px 3px 6px;
+            background-color: #000000;
+            color: #ffffff;
+        }
+        .active-object:hover .label {
+            display: none;
+        }
+        .static-object {
+            position: relative;
+            float: left;
+            overflow: hidden;
+            width: 200px;
+            height: 250px;
+            margin: 0 10px 10px 0;
+            background-color: #f5f5f5;
+            background-repeat: no-repeat;
+            background-size: 100%;
+            background-position: center;
+            border: 1px solid #000000;
+            cursor: pointer;
+        }
+        .static-object .label {
+            display: inline-block;
+            padding: 3px 6px 3px 6px;
+            background-color: #000000;
+            color: #ffffff;
+        }
+        .static-object:hover .label {
+            display: none;
+        }
+        .top-object {
+            position: relative;
+            float: left;
+            overflow: hidden;
+            width: 200px;
+            height: 250px;
+            margin: 0 10px 10px 0;
+            background-color: #f5f5f5;
+            background-repeat: no-repeat;
+            background-size: 100%;
+            background-position: center;
+            border: 1px solid #000000;
+            cursor: pointer;
+        }
+        .top-object .label {
+            display: inline-block;
+            padding: 3px 6px 3px 6px;
+            background-color: #000000;
+            color: #ffffff;
+        }
+        .top-object:hover .label {
+            display: none;
+        }
+        .event {
+            position: relative;
+            float: left;
+            overflow: hidden;
+            width: 200px;
+            height: 250px;
+            margin: 0 10px 10px 0;
+            padding: 5px;
+            background-color: #f5f5f5;
+            background-repeat: no-repeat;
+            background-size: 100%;
+            background-position: center;
+            border: 1px solid #000000;
+            color: #000000;
+            cursor: pointer;
+            box-sizing: border-box;
+        }
+        #data-id,
+        #size-x,
+        #size-y {
+            display: inline-block;
+            width: 40px;
+            margin: 0 3px 0 0;
+            padding: 2px 5px 2px 5px;
+            background-color: #ffffff;
+            border: 1px solid #343434;
+            color: #343434;
+            border-radius: 7px;
+            outline: 0;
+        }
+        </style>
+        <script type="text/javascript">
+            var deleteMode = false;
+            var currentMapId = false;
+            var add = false;
+            var defaultSize = {
+                'x' : 150,
+                'y' : 150
+            }
+            var tile = {
+                'x' : 60,
+                'y' : 40
+            }
+            var mouse = {
+                'x' : 0,
+                'y' : 0,
+                'last' : {
+                    'x' : 0,
+                    'y' : 0
+                },
+                'down' : {
+                    'type' : false,
+                    'element' : false
+                }
+            }
+            var selected = {
+                'ground' : false,
+                'active' : false,
+                'static' : false,
+                'top' : false,
+                'event' : false
+            }
+            var containers = {
+                'ground' : false,
+                'wall' : false,
+                'event' : false,
+                'active' : false,
+                'static' : false,
+                'top' : false
+            }
+            var data = {
+                'ground' : false,
+                'active' : false,
+                'static' : false,
+                'top' : false,
+                'events' : false
+            }
+            var map = {
+                'size' : {
+                    'x' : 200,
+                    'y' : 200
+                },
+                'layers' : {
+                    'ground' : false,
+                    'active' : false,
+                    'static' : false,
+                    'top' : false,
+                    'events' : false,
+                    'wall' : false
+                }
+            }
+            /* ================ */
+            /* === Save Map === */
+            /* ================ */
+            function saveMap() {
+                var objects = document.querySelectorAll('#ground-container img');
+                map.layers.ground = [];
+                for (var i = 0; i < objects.length; i++) {
+                    map.layers.ground.push([
+                        objects[i].getAttribute('data-id'),
+                        parseInt(objects[i].getAttribute('data-map-x')),
+                        parseInt(objects[i].getAttribute('data-map-y'))
+                    ]);
+                }
+
+                var objects = document.querySelectorAll('#active-container div');
+                map.layers.active = [];
+                for (var i = 0; i < objects.length; i++) {
+                    map.layers.active.push([
+                        objects[i].getAttribute('data-id'),
+                        parseInt(objects[i].getAttribute('data-map-x')),
+                        parseInt(objects[i].getAttribute('data-map-y'))
+                    ]);
+                }
+
+                var objects = document.querySelectorAll('#static-container div');
+                map.layers.static = [];
+                for (var i = 0; i < objects.length; i++) {
+                    map.layers.static.push([
+                        objects[i].getAttribute('data-id'),
+                        parseInt(objects[i].getAttribute('data-map-x')),
+                        parseInt(objects[i].getAttribute('data-map-y'))
+                    ]);
+                }
+
+                var objects = document.querySelectorAll('#top-container img');
+                map.layers.top = [];
+                for (var i = 0; i < objects.length; i++) {
+                    map.layers.top.push([
+                        objects[i].getAttribute('data-id'),
+                        parseInt(objects[i].getAttribute('data-map-x')),
+                        parseInt(objects[i].getAttribute('data-map-y'))
+                    ]);
+                }
+
+                var objects = document.querySelectorAll('#event-container div');
+                map.layers.events = [];
+                for (var i = 0; i < objects.length; i++) {
+                    map.layers.events.push([
+                        objects[i].getAttribute('data-id'),
+                        parseInt(objects[i].getAttribute('data-map-x')),
+                        parseInt(objects[i].getAttribute('data-map-y'))
+                    ]);
+                }
+
+                var post = new FormData();
+                post.append('id', currentMapId);
+                post.append('map', JSON.stringify(map));
+                
+                var request = new XMLHttpRequest();
+                request.open('POST', 'save.php', false);
+                request.send(post);
+            }
+            /* =================== */
+            /* === Add Objects === */
+            /* =================== */
+            function AddClass() {
+                this.ground = function(id, x, y) {
+                    var element = document.createElement('img');
+
+                    element.setAttribute('data-id', id);
+                    element.setAttribute('src', data.ground[id]);
+                    element.setAttribute('data-x', Math.round((x * tile.x) + (tile.x / 2)));
+                    element.setAttribute('data-y', Math.round((y * tile.y) + (tile.y / 2)));
+                    element.setAttribute('data-map-x', x);
+                    element.setAttribute('data-map-y', y);
+                    element.style['left'] = (x * tile.x) + 'px';
+                    element.style['top'] = (y * tile.y) + 'px';
+
+                    element.addEventListener('mousedown', function(event) {
+                        if (deleteMode) { 
+                            this.parentNode.removeChild(this);
+                            mouse.down.type = false;
+                            mouse.down.element = false;
+                        }
+                        else {
+                            mouse.down.type = 'ground-image';
+                            mouse.down.element = this;
+                        }
+                        event.preventDefault();
+                        event.stopPropagation();
+                    });
+
+                    element.addEventListener('mouseup', function(event) {
+                        mouse.down.type = false;
+                        mouse.down.element = false;
+                    });
+
+                    containers.ground.appendChild(element);
+                }
+                this.active = function(id, x, y) {
+                    var element = document.createElement('div');
+
+                    element.setAttribute('data-id', id);
+                    element.setAttribute('data-x', Math.round((x * tile.x) + (tile.x / 2)));
+                    element.setAttribute('data-y', Math.round((y * tile.y) + (tile.y / 2)));
+                    element.setAttribute('data-map-x', x);
+                    element.setAttribute('data-map-y', y);
+                    element.style['background-image'] = 'url(' + data.active[id].image + ')';
+                    element.style['left'] = ((x * tile.x) + data.active[id].offset.x) + 'px';
+                    element.style['top'] = ((y * tile.y) + data.active[id].offset.y) + 'px';
+                    element.style['width'] = data.active[id].size.x + 'px';
+                    element.style['height'] = data.active[id].size.y + 'px';
+
+                    element.addEventListener('mousedown', function(event) {
+                        if (deleteMode) { 
+                            this.parentNode.removeChild(this);
+                            mouse.down.type = false;
+                            mouse.down.element = false;
+                        }
+                        else {
+                            mouse.down.type = 'active-object';
+                            mouse.down.element = this;
+                        }
+                        event.preventDefault();
+                        event.stopPropagation();
+                    });
+
+                    element.addEventListener('mouseup', function(event) {
+                        mouse.down.type = false;
+                        mouse.down.element = false;
+                    });
+
+                    containers.active.appendChild(element);
+                }
+                this.static = function(id, x, y) {
+                    var element = document.createElement('div');
+
+                    element.setAttribute('data-id', id);
+                    element.setAttribute('data-x', Math.round((x * tile.x) + (tile.x / 2)));
+                    element.setAttribute('data-y', Math.round((y * tile.y) + (tile.y / 2)));
+                    element.setAttribute('data-map-x', x);
+                    element.setAttribute('data-map-y', y);
+                    element.style['background-image'] = 'url(' + data.static[id].image + ')';
+                    element.style['left'] = ((x * tile.x) + data.static[id].offset.x) + 'px';
+                    element.style['top'] = ((y * tile.y) + data.static[id].offset.y) + 'px';
+                    element.style['width'] = data.static[id].size.x + 'px';
+                    element.style['height'] = data.static[id].size.y + 'px';
+
+                    element.addEventListener('mousedown', function(event) {
+                        if (deleteMode) { 
+                            this.parentNode.removeChild(this);
+                            mouse.down.type = false;
+                            mouse.down.element = false;
+                        }
+                        else {
+                            mouse.down.type = 'static-object';
+                            mouse.down.element = this;
+                        }
+                        event.preventDefault();
+                        event.stopPropagation();
+                    });
+
+                    element.addEventListener('mouseup', function(event) {
+                        mouse.down.type = false;
+                        mouse.down.element = false;
+                    });
+
+                    containers.static.appendChild(element);
+                }
+                this.top = function(id, x, y) {
+                    var element = document.createElement('img');
+
+                    element.setAttribute('data-id', id);
+                    element.setAttribute('src', data.top[id].image);
+                    element.setAttribute('data-x', Math.round((x * tile.x) + (tile.x / 2)));
+                    element.setAttribute('data-y', Math.round((y * tile.y) + (tile.y / 2)));
+                    element.setAttribute('data-map-x', x);
+                    element.setAttribute('data-map-y', y);
+                    element.style['left'] = (x * tile.x) + 'px';
+                    element.style['top'] = (y * tile.y) + 'px';
+
+                    element.addEventListener('mousedown', function(event) {
+                        if (deleteMode) { 
+                            this.parentNode.removeChild(this);
+                            mouse.down.type = false;
+                            mouse.down.element = false;
+                        }
+                        else {
+                            mouse.down.type = 'top-object';
+                            mouse.down.element = this;
+                        }
+                        event.preventDefault();
+                        event.stopPropagation();
+                    });
+
+                    element.addEventListener('mouseup', function(event) {
+                        mouse.down.type = false;
+                        mouse.down.element = false;
+                    });
+
+                    containers.top.appendChild(element);
+                }
+                this.event = function(id, x, y) {
+                    var element = document.createElement('div');
+
+                    element.setAttribute('data-id', id);
+                    element.setAttribute('data-x', Math.round((x * tile.x) + (tile.x / 2)));
+                    element.setAttribute('data-y', Math.round((y * tile.y) + (tile.y / 2)));
+                    element.setAttribute('data-map-x', x);
+                    element.setAttribute('data-map-y', y);
+                    element.style['left'] = (x * tile.x) + 'px';
+                    element.style['top'] = (y * tile.y) + 'px';
+                    element.style['width'] = tile.x + 'px';
+                    element.style['height'] = tile.y + 'px';
+                    element.innerHTML = data.events[id].labels.editor;
+
+                    element.addEventListener('mousedown', function(event) {
+                        if (deleteMode) { 
+                            this.parentNode.removeChild(this);
+                            mouse.down.type = false;
+                            mouse.down.element = false;
+                        }
+                        else {
+                            mouse.down.type = 'events';
+                            mouse.down.element = this;
+                        }
+                        event.preventDefault();
+                        event.stopPropagation();
+                    });
+
+                    element.addEventListener('mouseup', function(event) {
+                        mouse.down.type = false;
+                        mouse.down.element = false;
+                    });
+
+                    containers.event.appendChild(element);
+                }
+                this.wall = function(x, y) {
+                    map.layers.wall[y][x] = 1;
+
+                    var element = document.createElement('div');
+                    element.setAttribute('data-x', x);
+                    element.setAttribute('data-y', y);
+                    element.style.left = (x * tile.x) + 'px';
+                    element.style.top = (y * tile.y) + 'px';
+                    element.style['width'] = tile.x + 'px';
+                    element.style['height'] = tile.y + 'px';
+
+                    element.addEventListener('click', function(event) {
+                        map.layers.wall[this.getAttribute('data-y')][this.getAttribute('data-x')] = 0;
+                        this.parentNode.removeChild(this);
+                        event.stopPropagation();
+                    });
+
+                    document.querySelector('#wall-container').appendChild(element);
+                }
+            }
+            /* ================= */
+            /* === Load Data === */
+            /* ================= */
+            function loadData(mapId) {
+                var request = new XMLHttpRequest();
+                /* -------------------------- */
+                /* --- Load Ground Images --- */
+                /* -------------------------- */
+                request.open('GET', 'data/' + mapId + '/ground.json', false);
+                request.send();
+                if (request.status == 200) {
+                    data.ground = JSON.parse(request.responseText);
+                    for (var id in data.ground) {
+                        var div = document.createElement('div');
+                        div.setAttribute('class', 'ground-image');
+                        div.setAttribute('data-id', id);
+                        div.style['background-image'] = 'url(' + data.ground[id] + ')';
+
+                        div.addEventListener('click', function(event) {
+                            selected.ground = this.getAttribute('data-id');
+                            document.querySelector('#ground-images-popup').style['display'] = 'none';
+                            event.stopPropagation();
+                        });
+
+                        document.querySelector('#ground-images-popup').appendChild(div);
+                    }
+                }
+                /* --------------------------- */
+                /* --- Load Active Objects --- */
+                /* --------------------------- */
+                request.open('GET', 'data/' + mapId + '/active.json', false);
+                request.send();
+                if (request.status == 200) { 
+                    data.active = JSON.parse(request.responseText);
+                    for (var id in data.active) {
+                        var label = document.createElement('span');
+                        label.setAttribute('class', 'label');
+                        label.innerHTML = data.active[id].labels.editor;
+
+                        var div = document.createElement('div');
+                        div.setAttribute('class', 'active-object');
+                        div.setAttribute('data-id', id);
+                        div.style['background-image'] = 'url(' + data.active[id].image + ')';
+
+                        div.appendChild(label);
+
+                        div.addEventListener('click', function(event) {
+                            selected.active = this.getAttribute('data-id');
+                            document.querySelector('#active-objects-popup').style['display'] = 'none';
+                            event.stopPropagation();
+                        });
+
+                        document.querySelector('#active-objects-popup').appendChild(div);
+                    }
+                }
+                /* --------------------------- */
+                /* --- Load Static Objects --- */
+                /* --------------------------- */
+                request.open('GET', 'data/' + mapId + '/static.json', false);
+                request.send();
+                if (request.status == 200) { 
+                    data.static = JSON.parse(request.responseText);
+                    for (var id in data.static) {
+                        var div = document.createElement('div');
+                        div.setAttribute('class', 'static-object');
+                        div.setAttribute('data-id', id);
+                        div.style['background-image'] = 'url(' + data.static[id].image + ')';
+
+                        div.addEventListener('click', function(event) {
+                            selected.static = this.getAttribute('data-id');
+                            document.querySelector('#static-objects-popup').style['display'] = 'none';
+                            event.stopPropagation();
+                        });
+
+                        document.querySelector('#static-objects-popup').appendChild(div);
+                    }
+                }
+                /* ------------------------ */
+                /* --- Load Top Objects --- */
+                /* ------------------------ */
+                request.open('GET', 'data/' + mapId + '/top.json', false);
+                request.send();
+                if (request.status == 200) {
+                    data.top = JSON.parse(request.responseText);
+                    for (var id in data.top) {
+                        var div = document.createElement('div');
+                        div.setAttribute('class', 'top-object');
+                        div.setAttribute('data-id', id);
+                        div.style['background-image'] = 'url(' + data.top[id].image + ')';
+
+                        div.addEventListener('click', function(event) {
+                            selected.top = this.getAttribute('data-id');
+                            document.querySelector('#top-objects-popup').style['display'] = 'none';
+                            event.stopPropagation();
+                        });
+
+                        document.querySelector('#top-objects-popup').appendChild(div);
+                    }
+                }
+                /* ------------------- */
+                /* --- Load Events --- */
+                /* ------------------- */
+                request.open('GET', 'data/' + mapId + '/events.json', false);
+                request.send();
+                if (request.status == 200) {
+                    data.events = JSON.parse(request.responseText);
+                    for (var id in data.events) {
+                        var div = document.createElement('div');
+                        div.setAttribute('class', 'event');
+                        div.setAttribute('data-id', id);
+                        div.innerHTML = data.events[id].labels.editor;
+
+                        div.addEventListener('click', function(event) {
+                            selected.event = this.getAttribute('data-id');
+                            document.querySelector('#events-popup').style['display'] = 'none';
+                            event.stopPropagation();
+                        });
+
+                        document.querySelector('#events-popup').appendChild(div);
+                    }
+                }
+            }
+            /* ==================== */
+            /* === Set Map Size === */
+            /* ==================== */
+            function setSize(newX, newY) {
+                map.size.x = newX;
+                map.size.y = newY;
+                var width = (map.size.x * tile.x) + 'px';
+                var height = (map.size.y * tile.y) + 'px';
+                containers.ground.style['width'] = width;
+                containers.wall.style['width'] = width;
+                containers.event.style['width'] = width;
+                containers.active.style['width'] = width;
+                containers.static.style['width'] = width;
+                containers.top.style['width'] = width;
+                containers.ground.style['height'] = height;
+                containers.wall.style['height'] = height;
+                containers.event.style['height'] = height;
+                containers.active.style['height'] = height;
+                containers.static.style['height'] = height;
+                containers.top.style['height'] = height;
+                document.querySelector('#size-x').value = map.size.x;
+                document.querySelector('#size-y').value = map.size.y;
+            }
+            /* ================= */
+            /* === Reset All === */
+            /* ================= */
+            function resetAll() {
+                containers.ground.innerHTML = '';
+                containers.wall.innerHTML = '';
+                containers.event.innerHTML = '';
+                containers.active.innerHTML = '';
+                containers.static.innerHTML = '';
+                containers.top.innerHTML = '';
+
+                selected.ground = false;
+                selected.active = false;
+                selected.static = false;
+                selected.top = false;
+                selected.event = false;
+
+                var objects = document.querySelectorAll('#ground-images-popup .ground-image');
+                for (var i = 0; i < objects.length; i++) { objects[i].parentNode.removeChild(objects[i]); }
+
+                var objects = document.querySelectorAll('#active-objects-popup .active-object');
+                for (var i = 0; i < objects.length; i++) { objects[i].parentNode.removeChild(objects[i]); }
+
+                var objects = document.querySelectorAll('#static-objects-popup .static-object');
+                for (var i = 0; i < objects.length; i++) { objects[i].parentNode.removeChild(objects[i]); }
+
+                var objects = document.querySelectorAll('#top-objects-popup .top-object');
+                for (var i = 0; i < objects.length; i++) { objects[i].parentNode.removeChild(objects[i]); }
+
+                var objects = document.querySelectorAll('#events-popup .event');
+                for (var i = 0; i < objects.length; i++) { objects[i].parentNode.removeChild(objects[i]); } 
+            }
+            /* ========================== */
+            /* === Load Or Create Map === */
+            /* ========================== */
+            function loadMap(mapId) {
+                var request = new XMLHttpRequest();
+                request.open('GET', 'data/' + mapId + '/map.json', false);
+                request.send();
+                if (request.status == 200) {
+                    map = JSON.parse(request.responseText);
+                    setSize(map.size.x, map.size.y);
+
+                    for (var id in map.layers.ground) {
+                        add.ground(map.layers.ground[id][0], map.layers.ground[id][1], map.layers.ground[id][2])
+                    }
+
+                    for (var id in map.layers.active) {
+                        add.active(map.layers.active[id][0], map.layers.active[id][1], map.layers.active[id][2])
+                    }
+
+                    for (var id in map.layers.static) {
+                        add.static(map.layers.static[id][0], map.layers.static[id][1], map.layers.static[id][2])
+                    }
+
+                    for (var id in map.layers.top) {
+                        add.top(map.layers.top[id][0], map.layers.top[id][1], map.layers.top[id][2])
+                    }
+
+                    for (var id in map.layers.events) {
+                        add.event(map.layers.events[id][0], map.layers.events[id][1], map.layers.events[id][2])
+                    }
+
+                    for (var y = 0; y < map.size.y; y++) {
+                        for (var x = 0; x < map.size.x; x++) {
+                            if (map.layers.wall[y][x] == 1) { add.wall(x, y); }
+                        }
+                    }
+                }
+                else { 
+                    setSize(defaultSize.x, defaultSize.y);
+                    map.layers.wall = [];
+                    for (var y = 0; y < map.size.y; y++) {
+                        map.layers.wall[y] = [];
+                        for (var x = 0; x < map.size.x; x++) {
+                            map.layers.wall[y][x] = 0;
+                        }
+                    }
+                }
+            }
+            function ready() {
+                containers.ground = document.querySelector('#ground-container');
+                containers.wall = document.querySelector('#wall-container');
+                containers.event = document.querySelector('#event-container');
+                containers.active = document.querySelector('#active-container');
+                containers.static = document.querySelector('#static-container');
+                containers.top = document.querySelector('#top-container');
+                add = new AddClass();
+                /* ======================== */
+                /* === Hide/Show Layers === */
+                /* ======================== */
+                document.querySelector('#show-ground-container').addEventListener('click', function() {
+                    if (this.innerHTML == 'hide') {
+                        containers.ground.style['display'] = 'none';
+                        this.style['background-color'] = '#a50000';
+                        this.innerHTML = 'show';
+                    }
+                    else {
+                        containers.ground.style['display'] = 'block';
+                        this.style['background-color'] = '#008500';
+                        this.innerHTML = 'hide';
+                    }
+                });
+                document.querySelector('#show-wall-container').addEventListener('click', function() {
+                    if (this.innerHTML == 'hide') {
+                        containers.wall.style['display'] = 'none';
+                        this.style['background-color'] = '#a50000';
+                        this.innerHTML = 'show';
+                    }
+                    else {
+                        containers.wall.style['display'] = 'block';
+                        this.style['background-color'] = '#008500';
+                        this.innerHTML = 'hide';
+                    }
+                });
+                document.querySelector('#show-event-container').addEventListener('click', function() {
+                    if (this.innerHTML == 'hide') {
+                        containers.event.style['display'] = 'none';
+                        this.style['background-color'] = '#a50000';
+                        this.innerHTML = 'show';
+                    }
+                    else {
+                        containers.event.style['display'] = 'block';
+                        this.style['background-color'] = '#008500';
+                        this.innerHTML = 'hide';
+                    }
+                });
+                document.querySelector('#show-active-container').addEventListener('click', function() {
+                    if (this.innerHTML == 'hide') {
+                        containers.active.style['display'] = 'none';
+                        this.style['background-color'] = '#a50000';
+                        this.innerHTML = 'show';
+                    }
+                    else {
+                        containers.active.style['display'] = 'block';
+                        this.style['background-color'] = '#008500';
+                        this.innerHTML = 'hide';
+                    }
+                });
+                document.querySelector('#show-static-container').addEventListener('click', function() {
+                    if (this.innerHTML == 'hide') {
+                        containers.static.style['display'] = 'none';
+                        this.style['background-color'] = '#a50000';
+                        this.innerHTML = 'show';
+                    }
+                    else {
+                        containers.static.style['display'] = 'block';
+                        this.style['background-color'] = '#008500';
+                        this.innerHTML = 'hide';
+                    }
+                });
+                document.querySelector('#show-top-container').addEventListener('click', function() {
+                    if (this.innerHTML == 'hide') {
+                        containers.top.style['display'] = 'none';
+                        this.style['background-color'] = '#a50000';
+                        this.innerHTML = 'show';
+                    }
+                    else {
+                        containers.top.style['display'] = 'block';
+                        this.style['background-color'] = '#008500';
+                        this.innerHTML = 'hide';
+                    }
+                });
+                /* ========================== */
+                /* === Main Panel Buttons === */
+                /* ========================== */
+                document.querySelector('#change-main-panel-location').addEventListener('click', function() {
+                    var element = document.querySelector('#main-panel');
+                    if (element.getAttribute('class') == 'top') { element.setAttribute('class', 'bottom'); }
+                    else { element.setAttribute('class', 'top'); }
+                });
+                document.querySelector('#change-delete-mode').addEventListener('click', function() {
+                    if (this.innerHTML == 'on') {
+                        deleteMode = true;
+                        this.style['background-color'] = '#008500';
+                        this.innerHTML = 'off';
+                    }
+                    else {
+                        deleteMode = false;
+                        this.style['background-color'] = '#a50000';
+                        this.innerHTML = 'on';
+                    }
+                });
+                document.querySelector('#load-data').addEventListener('click', function() {
+                    currentMapId = document.querySelector('#data-id').value;
+                    resetAll();
+                    loadData(currentMapId);
+                    loadMap(currentMapId);                    
+                });
+                document.querySelector('#change-size').addEventListener('click', function() {
+                    if (currentMapId !== false) {
+                        var newX = document.querySelector('#size-x').value;
+                        var newY = document.querySelector('#size-y').value;
+
+                        setSize(newX, newY);
+
+                        var objects = document.querySelectorAll('#wall-container div');
+                        for (var i = 0; i < objects.length; i++) {
+                            objects[i].parentNode.removeChild(objects[i]);
+                        }
+
+                        var newWall = [];
+                        for (var y = 0; y < map.size.y; y++) {
+                            newWall[y] = [];
+                            for (var x = 0; x < map.size.x; x++) {
+                                newWall[y][x] = 0;
+                                if ((typeof map.layers.wall[y] != 'undefined')
+                                && (typeof map.layers.wall[y][x] != 'undefined')) {
+                                    newWall[y][x] = map.layers.wall[y][x];                                    
+                                }
+                                else { newWall[y][x] = 0; }
+                            }
+                        }
+
+                        map.layers.wall = [];
+                        for (var y = 0; y < map.size.y; y++) {
+                            map.layers.wall[y] = [];
+                            for (var x = 0; x < map.size.x; x++) {
+                                map.layers.wall[y][x] = 0;
+                                if (newWall[y][x] == 1) { add.wall(x, y); }
+                            }
+                        }
+
+                        var objects = document.querySelectorAll('#ground-container img');
+                        for (var i = 0; i < objects.length; i++) {
+                            if ((parseInt(objects[i].getAttribute('data-map-x')) >= map.size.x)
+                            || (parseInt(objects[i].getAttribute('data-map-y')) >= map.size.y)) {
+                                objects[i].parentNode.removeChild(objects[i]);
+                            }
+                        }
+
+                        var objects = document.querySelectorAll('#active-container div');
+                        for (var i = 0; i < objects.length; i++) {
+                            if ((parseInt(objects[i].getAttribute('data-map-x')) >= map.size.x)
+                            || (parseInt(objects[i].getAttribute('data-map-y')) >= map.size.y)) {
+                                objects[i].parentNode.removeChild(objects[i]);
+                            }
+                        }
+
+                        var objects = document.querySelectorAll('#static-container div');
+                        for (var i = 0; i < objects.length; i++) {
+                            if ((parseInt(objects[i].getAttribute('data-map-x')) >= map.size.x)
+                            || (parseInt(objects[i].getAttribute('data-map-y')) >= map.size.y)) {
+                                objects[i].parentNode.removeChild(objects[i]);
+                            }
+                        }
+
+                        var objects = document.querySelectorAll('#top-container img');
+                        for (var i = 0; i < objects.length; i++) {
+                            if ((parseInt(objects[i].getAttribute('data-map-x')) >= map.size.x)
+                            || (parseInt(objects[i].getAttribute('data-map-y')) >= map.size.y)) {
+                                objects[i].parentNode.removeChild(objects[i]);
+                            }
+                        }
+
+                        var objects = document.querySelectorAll('#event-container div');
+                        for (var i = 0; i < objects.length; i++) {
+                            if ((parseInt(objects[i].getAttribute('data-map-x')) >= map.size.x)
+                            || (parseInt(objects[i].getAttribute('data-map-y')) >= map.size.y)) {
+                                objects[i].parentNode.removeChild(objects[i]);
+                            }
+                        }
+                    }
+                });
+                /* ======================== */
+                /* === Hide/Show Popups === */
+                /* ======================== */
+                document.querySelector('#show-ground-images-popup').addEventListener('click', function() {
+                    document.querySelector('#ground-images-popup').style['display'] = 'block';
+                });
+                document.querySelector('#hide-ground-images-popup').addEventListener('click', function() {
+                    document.querySelector('#ground-images-popup').style['display'] = 'none';
+                });
+                document.querySelector('#show-active-objects-popup').addEventListener('click', function() {
+                    document.querySelector('#active-objects-popup').style['display'] = 'block';
+                });
+                document.querySelector('#hide-active-objects-popup').addEventListener('click', function() {
+                    document.querySelector('#active-objects-popup').style['display'] = 'none';
+                });
+                document.querySelector('#show-static-objects-popup').addEventListener('click', function() {
+                    document.querySelector('#static-objects-popup').style['display'] = 'block';
+                });
+                document.querySelector('#hide-static-objects-popup').addEventListener('click', function() {
+                    document.querySelector('#static-objects-popup').style['display'] = 'none';
+                });
+                document.querySelector('#show-top-objects-popup').addEventListener('click', function() {
+                    document.querySelector('#top-objects-popup').style['display'] = 'block';
+                });
+                document.querySelector('#hide-top-objects-popup').addEventListener('click', function() {
+                    document.querySelector('#top-objects-popup').style['display'] = 'none';
+                });
+                document.querySelector('#show-events-popup').addEventListener('click', function() {
+                    document.querySelector('#events-popup').style['display'] = 'block';
+                });
+                document.querySelector('#hide-events-popup').addEventListener('click', function() {
+                    document.querySelector('#events-popup').style['display'] = 'none';
+                });
+                /* ======================== */
+                /* === Containers Click === */
+                /* ======================== */
+                containers.ground.addEventListener('mousedown', function(event) {
+                    if (selected.ground !== false) {
+                        var x = Math.round((event.layerX / tile.x) - 0.5);
+                        var y = Math.round((event.layerY / tile.y) - 0.5);
+                        add.ground(selected.ground, x, y);
+                    }
+                });
+                containers.active.addEventListener('mousedown', function(event) {
+                    if (selected.active !== false) {
+                        var x = Math.round((event.layerX / tile.x) - 0.5);
+                        var y = Math.round((event.layerY / tile.y) - 0.5);
+                        add.active(selected.active, x, y);
+                    }
+                });
+                containers.static.addEventListener('mousedown', function(event) {
+                    if (selected.static !== false) {
+                        var x = Math.round((event.layerX / tile.x) - 0.5);
+                        var y = Math.round((event.layerY / tile.y) - 0.5);
+                        add.static(selected.static, x, y);
+                    }
+                });
+                containers.top.addEventListener('mousedown', function(event) {
+                    if (selected.top !== false) {
+                        var x = Math.round((event.layerX / tile.x) - 0.5);
+                        var y = Math.round((event.layerY / tile.y) - 0.5);
+                        add.top(selected.top, x, y);
+                    }
+                });
+                containers.event.addEventListener('mousedown', function(event) {
+                    if (selected.event !== false) {
+                        var x = Math.round((event.layerX / tile.x) - 0.5);
+                        var y = Math.round((event.layerY / tile.y) - 0.5);
+                        add.event(selected.event, x, y);
+                    }
+                });
+                containers.wall.addEventListener('click', function(event) {
+                    var x = Math.round((event.layerX / tile.x) - 0.5);
+                    var y = Math.round((event.layerY / tile.y) - 0.5);
+                    if (map.layers.wall[y][x] == 0) { add.wall(x, y); }
+                });
+                /* ================== */
+                /* === Mouse Move === */
+                /* ================== */
+                document.addEventListener('mousemove', function(event) {
+                    mouse.x = event.x;
+                    mouse.y = event.y;
+
+                    if (mouse.down.element) {
+                        if (mouse.down.type == 'ground-image') {
+                            var x = parseInt(mouse.down.element.getAttribute('data-x'));
+                            var y = parseInt(mouse.down.element.getAttribute('data-y'));
+                            x += mouse.x - mouse.last.x;
+                            y += mouse.y - mouse.last.y;
+                            mapX = Math.round((x / tile.x) - 0.5);
+                            mapY = Math.round((y / tile.y) - 0.5);
+                            mouse.down.element.setAttribute('data-x', x);
+                            mouse.down.element.setAttribute('data-y', y);
+                            mouse.down.element.setAttribute('data-map-x', mapX);
+                            mouse.down.element.setAttribute('data-map-y', mapY);
+                            mouse.down.element.style['left'] = (mapX * tile.x) + 'px';
+                            mouse.down.element.style['top'] = (mapY * tile.y) + 'px';
+                        }
+                        else if (mouse.down.type == 'active-object') {
+                            var offsetX = data.active[mouse.down.element.getAttribute('data-id')].offset.x;
+                            var offsetY = data.active[mouse.down.element.getAttribute('data-id')].offset.y;
+                            var x = parseInt(mouse.down.element.getAttribute('data-x'));
+                            var y = parseInt(mouse.down.element.getAttribute('data-y'));
+                            x += mouse.x - mouse.last.x;
+                            y += mouse.y - mouse.last.y;
+                            mapX = Math.round((x / tile.x) - 0.5);
+                            mapY = Math.round((y / tile.y) - 0.5);
+                            mouse.down.element.setAttribute('data-x', x);
+                            mouse.down.element.setAttribute('data-y', y);
+                            mouse.down.element.setAttribute('data-map-x', mapX);
+                            mouse.down.element.setAttribute('data-map-y', mapY);
+                            mouse.down.element.style['left'] = ((mapX * tile.x) + offsetX) + 'px';
+                            mouse.down.element.style['top'] = ((mapY * tile.y) + offsetY) + 'px';
+                        }
+                        else if (mouse.down.type == 'static-object') {
+                            var offsetX = data.static[mouse.down.element.getAttribute('data-id')].offset.x;
+                            var offsetY = data.static[mouse.down.element.getAttribute('data-id')].offset.y;
+                            var x = parseInt(mouse.down.element.getAttribute('data-x'));
+                            var y = parseInt(mouse.down.element.getAttribute('data-y'));
+                            x += mouse.x - mouse.last.x;
+                            y += mouse.y - mouse.last.y;
+                            mapX = Math.round((x / tile.x) - 0.5);
+                            mapY = Math.round((y / tile.y) - 0.5);
+                            mouse.down.element.setAttribute('data-x', x);
+                            mouse.down.element.setAttribute('data-y', y);
+                            mouse.down.element.setAttribute('data-map-x', mapX);
+                            mouse.down.element.setAttribute('data-map-y', mapY);
+                            mouse.down.element.style['left'] = ((mapX * tile.x) + offsetX) + 'px';
+                            mouse.down.element.style['top'] = ((mapY * tile.y) + offsetY) + 'px';
+                        }
+                        else if (mouse.down.type == 'top-object') {
+                            var x = parseInt(mouse.down.element.getAttribute('data-x'));
+                            var y = parseInt(mouse.down.element.getAttribute('data-y'));
+                            x += mouse.x - mouse.last.x;
+                            y += mouse.y - mouse.last.y;
+                            mapX = Math.round((x / tile.x) - 0.5);
+                            mapY = Math.round((y / tile.y) - 0.5);
+                            mouse.down.element.setAttribute('data-x', x);
+                            mouse.down.element.setAttribute('data-y', y);
+                            mouse.down.element.setAttribute('data-map-x', mapX);
+                            mouse.down.element.setAttribute('data-map-y', mapY);
+                            mouse.down.element.style['left'] = (mapX * tile.x) + 'px';
+                            mouse.down.element.style['top'] = (mapY * tile.y) + 'px';
+                        }
+                        else if (mouse.down.type == 'events') {
+                            var x = parseInt(mouse.down.element.getAttribute('data-x'));
+                            var y = parseInt(mouse.down.element.getAttribute('data-y'));
+                            x += mouse.x - mouse.last.x;
+                            y += mouse.y - mouse.last.y;
+                            mapX = Math.round((x / tile.x) - 0.5);
+                            mapY = Math.round((y / tile.y) - 0.5);
+                            mouse.down.element.setAttribute('data-x', x);
+                            mouse.down.element.setAttribute('data-y', y);
+                            mouse.down.element.setAttribute('data-map-x', mapX);
+                            mouse.down.element.setAttribute('data-map-y', mapY);
+                            mouse.down.element.style['left'] = (mapX * tile.x) + 'px';
+                            mouse.down.element.style['top'] = (mapY * tile.y) + 'px';
+                        }
+                    }
+
+                    mouse.last.x = mouse.x;
+                    mouse.last.y = mouse.y;
+                });
+                document.addEventListener('mouseup', function(event) {
+                    mouse.down.type = false;
+                    mouse.down.element = false;
+                });
+                document.addEventListener('mouseleave', function(event) {
+                    mouse.down.type = false;
+                    mouse.down.element = false;
+                });
+            }
+        </script>
+    </head>
+    <body onload="ready()">
+        <div id="ground-container"></div>
+        <div id="active-container"></div>
+        <div id="static-container"></div>
+        <div id="top-container"></div>
+        <div id="event-container"></div>
+        <div id="wall-container"></div>
+        <div id="main-panel" class="top">
+            <div class="row">
+                <span id="change-main-panel-location" class='inline-button'>T/B</span>
+                <span class='inline-button' id="save-map" onclick="saveMap()">Save Map</span>
+                Ground: <span id="show-ground-container" class="inline-button">hide</span>
+                Active: <span id="show-active-container" class="inline-button">hide</span>
+                Static: <span id="show-static-container" class="inline-button">hide</span>
+                Top: <span id="show-top-container" class="inline-button">hide</span>
+                Event: <span id="show-event-container" class="inline-button">hide</span>
+                Wall: <span id="show-wall-container" class="inline-button">hide</span>
+                Data: <input type="text" name="dataid" id="data-id" value="1">
+                <span id="load-data" class="inline-button">Load Data</span>
+            </div>
+            <div class="row">
+                <span id="show-ground-images-popup" class="inline-button">Ground Images</span>
+                <span id="show-active-objects-popup" class="inline-button">Active Objects</span>
+                <span id="show-static-objects-popup" class="inline-button">Static Objects</span>
+                <span id="show-top-objects-popup" class="inline-button">Top Objects</span>
+                <span id="show-events-popup" class="inline-button">Events</span>
+                Delete mode: <span id="change-delete-mode" class="inline-button">on</span>
+                X: <input type="text" name="sizex" id="size-x" value="150">
+                Y: <input type="text" name="sizey" id="size-y" value="150">
+                <span id="change-size" class="inline-button">Update Size</span>
+            </div>
+        </div>
+        <div class="popup" id="ground-images-popup">
+            <div class="popup-panel">
+                <span class="inline-button" id="hide-ground-images-popup">X</span>
+            </div>
+        </div>
+        <div class="popup" id="active-objects-popup">
+            <div class="popup-panel">
+                <span class="inline-button" id="hide-active-objects-popup">X</span>
+            </div>
+        </div>
+        <div class="popup" id="static-objects-popup">
+            <div class="popup-panel">
+                <span class="inline-button" id="hide-static-objects-popup">X</span>
+            </div>
+        </div>
+        <div class="popup" id="top-objects-popup">
+            <div class="popup-panel">
+                <span class="inline-button" id="hide-top-objects-popup">X</span>
+            </div>
+        </div>
+        <div class="popup" id="events-popup">
+            <div class="popup-panel">
+                <span class="inline-button" id="hide-events-popup">X</span>
+            </div>
+        </div>
+    </body>
+</html>
