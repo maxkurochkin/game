@@ -1,0 +1,22 @@
+{
+    "wall-1" : {
+        "size" : { "x" : 480, "y" : 160 },
+        "offset" : { "x" : 0, "y" : -120 },
+        "image" : "images/static/w1.png"
+    },
+    "wall-2" : {
+        "size" : { "x" : 480, "y" : 160 },
+        "offset" : { "x" : 0, "y" : -120 },
+        "image" : "images/static/w2.png"
+    },
+    "wall-3" : {
+        "size" : { "x" : 600, "y" : 160 },
+        "offset" : { "x" : 0, "y" : -120 },
+        "image" : "images/h1/hs1p.png"
+    },
+    "wall-4" : {
+        "size" : { "x" : 600, "y" : 160 },
+        "offset" : { "x" : 0, "y" : -120 },
+        "image" : "images/h1/hs2p.png"
+    }
+}

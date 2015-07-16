@@ -4,8 +4,8 @@ function ready() {
     ground.context = ground.element.getContext('2d');
     objects = document.querySelector('#objects-map');
     /* --- */
-    loadData(3);
-    loadMap(3);
+    loadData(4);
+    loadMap(4);
     renderMap();
     hideTop();
     /* --------------------------- */
