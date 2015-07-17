@@ -20,9 +20,9 @@ function ready() {
         }, 25);
     }
     window.requestAnimationFrame(animation);
-    /* ------------------------ */
-    /* --- Set Players Path --- */
-    /* ------------------------ */
+    /* -------------------------- */
+    /* --- Set Players Tatget --- */
+    /* -------------------------- */
     container.element.addEventListener('click', function(event) {
         var x = Math.round((event.offsetX / tile.x) - 0.5);
         var y = Math.round((event.offsetY / tile.y) - 0.5);
@@ -35,8 +35,22 @@ function ready() {
         if (x >= map.size.x) { x = map.size.x - 1; }
         if (y >= map.size.y) { y = map.size.y - 1; }
         /* --- */
-        mobs[playerId].targetMobId = false;
-        mobs[playerId].target.x = x;
-        mobs[playerId].target.y = y;
+        if (event.target != ground.element) {
+            for (id in mobs) {
+                var mapOffsetX = Math.round(mobs[id].settings.offset.x / tile.x);
+                var mapOffsetY = Math.round(mobs[id].settings.offset.y / tile.y);
+                /* --- */
+                if ((x >= mobs[id].x + mapOffsetX)
+                && (y >= mobs[id].y + mapOffsetY)
+                && (x < mobs[id].x + mapOffsetX + Math.round(mobs[id].settings.size.x / tile.x))
+                && (y < mobs[id].y + mapOffsetY + Math.round(mobs[id].settings.size.y / tile.y))
+                && (id != playerId)) { mobs[playerId].targetMobId = id; }
+            }
+        }
+        else {
+            mobs[playerId].targetMobId = false;
+            mobs[playerId].target.x = x;
+            mobs[playerId].target.y = y;
+        }
     });
 }

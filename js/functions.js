@@ -74,6 +74,7 @@ function renderMap() {
                 );
             }
             clearInterval(groundImagesLoading);
+            map.layers.ground = false;
         }
     }, 100);
     /* ----------------------------- */

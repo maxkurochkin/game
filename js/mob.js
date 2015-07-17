@@ -225,16 +225,18 @@ function PlayerMob(x, y, settings) {
     this.animation = [];
     /* Create html element */
     this.element = document.createElement('div');
-    this.element.setAttribute('class', 'player');
-    this.element.setAttribute('data-id', mobs.length);
+    /* --- */
     this.element.style.left = ((this.x * tile.x) + this.settings.offset.x) + 'px';
     this.element.style.top = ((this.y * tile.y) + this.settings.offset.y) + 'px';
     this.element.style['width'] = this.settings.size.x + 'px';
     this.element.style['height'] = this.settings.size.y + 'px';
     this.element.style['background-image'] = 'url(' + this.settings.image + ')';
     this.element.style['z-index'] = this.y;
+    /* --- */
     document.querySelector('#objects-map').appendChild(this.element);
-    /* Main action method */
+    /* -------------------------- */
+    /* --- Main Action Method --- */
+    /* -------------------------- */
     this.action = function() {
         if (this.settings.game.hp > 0) {
             var allowAttack = false;
@@ -283,7 +285,9 @@ function PlayerMob(x, y, settings) {
             this.dead = true;
         }
     }
-    /* Move method */
+    /* ------------------- */
+    /* --- Move Method --- */
+    /* ------------------- */
     this.move = function() {
         if ((this.movement.x != 0)
         || (this.movement.y != 0)) {
@@ -313,7 +317,9 @@ function PlayerMob(x, y, settings) {
             }
         }
     }
-    /* Attack method */
+    /* --------------------- */
+    /* --- Attack Method --- */
+    /* --------------------- */
     this.attack = function() {
         /* First step */
         if (this.attack.first) {
@@ -438,20 +444,18 @@ function AggressiveMob(x, y, settings) {
     this.animation = [];
     /* Create html element */
     this.element = document.createElement('div');
-    this.element.setAttribute('class', 'aggressive-mob');
-    this.element.setAttribute('data-id', mobs.length);
+    /* --- */
     this.element.style.left = ((this.x * tile.x) + this.settings.offset.x) + 'px';
     this.element.style.top = ((this.y * tile.y) + this.settings.offset.y) + 'px';
     this.element.style['width'] = this.settings.size.x + 'px';
     this.element.style['height'] = this.settings.size.y + 'px';
     this.element.style['background-image'] = 'url(' + this.settings.image + ')';
     this.element.style['z-index'] = this.y;
-    this.element.addEventListener('click', function(event) {
-        mobs[playerId].targetMobId = this.getAttribute('data-id');
-        event.stopPropagation();
-    });
+    /* --- */
     document.querySelector('#objects-map').appendChild(this.element);
-    /* Main action method */
+    /* -------------------------- */
+    /* --- Main Action Method --- */
+    /* -------------------------- */
     this.action = function() {
         if (this.settings.game.hp > 0) {
             var allowAttack = false;
@@ -492,7 +496,6 @@ function AggressiveMob(x, y, settings) {
         }
         else if (!this.dead) {
             objectsMap[this.y][this.x] = false;
-            this.element.innerHTML = this.settings.game.hp;
             this.element.style.left = ((this.x * tile.x) + this.settings.corpse.offset.x) + 'px';
             this.element.style.top = ((this.y * tile.y) + this.settings.corpse.offset.y) + 'px';
             this.element.style['width'] = this.settings.corpse.size.x + 'px';
@@ -503,7 +506,9 @@ function AggressiveMob(x, y, settings) {
             this.dead = true;
         }
     }
-    /* Move method */
+    /* ------------------- */
+    /* --- Move Method --- */
+    /* ------------------- */
     this.move = function() {
         if ((this.movement.x != 0)
         || (this.movement.y != 0)) {
@@ -532,7 +537,9 @@ function AggressiveMob(x, y, settings) {
             }
         }
     }
-    /* Attack method */
+    /* --------------------- */
+    /* --- Attack Method --- */
+    /* --------------------- */
     this.attack = function() {
         /* First step */
         if (this.attack.first) {
