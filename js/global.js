@@ -24,7 +24,7 @@ var ground = {
 
 var topObjects = [];
 
-var mobs = [];
+var active = [];
 
 var container = {
     'element' : false,

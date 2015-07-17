@@ -12,7 +12,7 @@ function ready() {
     /* --- Main Animation Loop --- */
     /* --------------------------- */
     function animation() {
-        for (id in mobs) { mobs[id].action(); }
+        for (id in active) { active[id].action(); }
         setContainerPosition();
         /* --- */
         setTimeout(function() {
@@ -36,21 +36,21 @@ function ready() {
         if (y >= map.size.y) { y = map.size.y - 1; }
         /* --- */
         if (event.target != ground.element) {
-            for (id in mobs) {
-                var mapOffsetX = Math.round(mobs[id].settings.offset.x / tile.x);
-                var mapOffsetY = Math.round(mobs[id].settings.offset.y / tile.y);
+            for (id in active) {
+                var mapOffsetX = Math.round(active[id].settings.offset.x / tile.x);
+                var mapOffsetY = Math.round(active[id].settings.offset.y / tile.y);
                 /* --- */
-                if ((x >= mobs[id].x + mapOffsetX)
-                && (y >= mobs[id].y + mapOffsetY)
-                && (x < mobs[id].x + mapOffsetX + Math.round(mobs[id].settings.size.x / tile.x))
-                && (y < mobs[id].y + mapOffsetY + Math.round(mobs[id].settings.size.y / tile.y))
-                && (id != playerId)) { mobs[playerId].targetMobId = id; }
+                if ((x >= active[id].x + mapOffsetX)
+                && (y >= active[id].y + mapOffsetY)
+                && (x < active[id].x + mapOffsetX + Math.round(active[id].settings.size.x / tile.x))
+                && (y < active[id].y + mapOffsetY + Math.round(active[id].settings.size.y / tile.y))
+                && (id != playerId)) { active[playerId].targetMobId = id; }
             }
         }
         else {
-            mobs[playerId].targetMobId = false;
-            mobs[playerId].target.x = x;
-            mobs[playerId].target.y = y;
+            active[playerId].targetMobId = false;
+            active[playerId].target.x = x;
+            active[playerId].target.y = y;
         }
     });
 }

@@ -2,8 +2,8 @@
 /* === Set Conteiner Position (player in center) === */
 /* ================================================= */
 function setContainerPosition() {
-    container.x = -1 * ((mobs[playerId].x * tile.x) - (window.innerWidth / 2));
-    container.y = -1 * ((mobs[playerId].y * tile.y) - (window.innerHeight / 2));
+    container.x = -1 * ((active[playerId].x * tile.x) - (window.innerWidth / 2));
+    container.y = -1 * ((active[playerId].y * tile.y) - (window.innerHeight / 2));
     /* --- */
     if (container.x > 0) { container.x = 0; }
     if (container.y > 0) { container.y = 0; }
@@ -30,8 +30,8 @@ function distance(x1, y1, x2, y2) {
 /* ================ */
 function hideTop() {
     for (var id in topObjects) {
-        var playerX = mobs[playerId].x * tile.x;
-        var playerY = mobs[playerId].y * tile.y;
+        var playerX = active[playerId].x * tile.x;
+        var playerY = active[playerId].y * tile.y;
         /* --- */
         var topX = topObjects[id].x * tile.x;
         var topY = topObjects[id].y * tile.y;
@@ -84,11 +84,11 @@ function renderMap() {
         var object = map.layers.active[id];
         var settings = JSON.parse(JSON.stringify(data.active[object[0]]));
         if (settings.type == 'aggressive-mob') {
-            mobs.push(new AggressiveMob(object[1], object[2], settings));
+            active.push(new AggressiveMob(object[1], object[2], settings));
         }
         else if (settings.type == 'player') {
-            playerId = mobs.length;
-            mobs.push(new PlayerMob(object[1], object[2], settings));
+            playerId = active.length;
+            active.push(new PlayerMob(object[1], object[2], settings));
         }
     }
     /* ----------------------------- */
