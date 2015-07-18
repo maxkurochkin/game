@@ -35,6 +35,7 @@ function ready() {
         if (x >= map.size.x) { x = map.size.x - 1; }
         if (y >= map.size.y) { y = map.size.y - 1; }
         /* --- */
+        var targetIsGround = true;
         if (event.target != ground.element) {
             for (id in active) {
                 var mapOffsetX = Math.round(active[id].settings.offset.x / tile.x);
@@ -44,10 +45,15 @@ function ready() {
                 && (y >= active[id].y + mapOffsetY)
                 && (x < active[id].x + mapOffsetX + Math.round(active[id].settings.size.x / tile.x))
                 && (y < active[id].y + mapOffsetY + Math.round(active[id].settings.size.y / tile.y))
-                && (id != playerId)) { active[playerId].targetMobId = id; }
+                && (id != playerId)
+                && (!active[id].dead)) { 
+                    active[playerId].targetMobId = id;
+                    targetIsGround = false;
+                }
             }
         }
-        else {
+        /* --- */
+        if (targetIsGround) {
             active[playerId].targetMobId = false;
             active[playerId].target.x = x;
             active[playerId].target.y = y;
