@@ -3,7 +3,7 @@ function ready() {
     ground.element = document.querySelector('#ground-map');
     ground.context = ground.element.getContext('2d');
     objects = document.querySelector('#objects-map');
-    gBody = document.querySelector('body');
+    globalBody = document.querySelector('body');
     /* --- */
     loadData(4);
     loadMap(4);

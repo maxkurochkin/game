@@ -19,7 +19,7 @@ function DialogClass(dialog) {
     /* --- */
     this.element = document.createElement('div');
     this.element.setAttribute('class', 'dialog');
-    gBody.appendChild(this.element);
+    globalBody.appendChild(this.element);
     /* --- */
     this.text = document.createElement('div');
     this.text.setAttribute('class', 'dialog-text');
@@ -61,7 +61,7 @@ function DialogClass(dialog) {
     /* --- Delete Method --- */
     /* --------------------- */
     this.delete = function() {
-        gBody.removeChild(this.element);
+        globalBody.removeChild(this.element);
         delete this;
     }
     /* -------------------- */
@@ -75,7 +75,7 @@ function DialogClass(dialog) {
 function PlayerPanelClass() {
     this.element = document.createElement('div');
     this.element.setAttribute('class', 'player-panel');
-    gBody.appendChild(this.element);
+    globalBody.appendChild(this.element);
     /* --- */
     this.hpContainer = document.createElement('div');
     this.hpContainer.setAttribute('class', 'player-hp-container');

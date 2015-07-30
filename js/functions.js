@@ -108,23 +108,6 @@ function renderMap() {
         /* --- */
         objects.appendChild(element);
     }
-    /* ----------------------------- */
-    /* --- Render Static Objects --- */
-    /* ----------------------------- */
-    for (var id in map.layers.static) {
-        var object = map.layers.static[id];
-        var settings = JSON.parse(JSON.stringify(data.static[object[0]]));
-        /* --- */
-        var element = document.createElement('div');
-        element.style['background-image'] = 'url(' + settings.image + ')';
-        element.style['left'] = ((object[1] * tile.x) + settings.offset.x) + 'px';
-        element.style['top'] = ((object[2] * tile.y) + settings.offset.y) + 'px';
-        element.style['width'] = settings.size.x + 'px';
-        element.style['height'] = settings.size.y + 'px';
-        element.style['z-index'] = object[2];
-        /* --- */
-        objects.appendChild(element);
-    }
     /* -------------------------- */
     /* --- Render Top Objects --- */
     /* -------------------------- */

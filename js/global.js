@@ -1,37 +1,22 @@
+/* ================= */
+/* === Constants === */
+/* ================= */
 var activateDistance = 12;
 var maxPathDistance = 32;
-
+/* ================= */
+/* === Player Id === */
+/* ================= */
 var playerId = 0;
-
+/* ============ */
+/* === Tile === */
+/* ============ */
 var tile = {
     'x' : 60,
     'y' : 40
-};
-
-var folders = {
-    'map' : 'map/',
-    'images' : 'images/'
-};
-
-var map = false;
-
-var objects = false;
-
-var ground = {
-    'element' : false, 
-    'context' : false 
 }
-
-var topObjects = [];
-
-var active = [];
-
-var container = {
-    'element' : false,
-    'x' : 0,
-    'y' : 0
-}
-
+/* ============ */
+/* === Data === */
+/* ============ */
 var data = {
     'ground' : false,
     'active' : false,
@@ -39,9 +24,42 @@ var data = {
     'top' : false,
     'events' : false
 }
-
+/* =========== */
+/* === Map === */
+/* =========== */
+var map = false;
+/* =================== */
+/* === Objects Map === */
+/* =================== */
 var objectsMap = [];
 /* ==================== */
 /* === Body Element === */
 /* ==================== */
-var gBody = false;
+var globalBody = false;
+/* ========================= */
+/* === Objects Container === */
+/* ========================= */
+var objects = false;
+/* ============== */
+/* === Ground === */
+/* ============== */
+var ground = {
+    'element' : false, 
+    'context' : false 
+}
+/* =================== */
+/* === Top Objects === */
+/* =================== */
+var topObjects = [];
+/* ====================== */
+/* === Active Objects === */
+/* ====================== */
+var active = [];
+/* ================= */
+/* === Container === */
+/* ================= */
+var container = {
+    'element' : false,
+    'x' : 0,
+    'y' : 0
+}
