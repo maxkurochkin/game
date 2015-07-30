@@ -41,3 +41,7 @@ var data = {
 }
 
 var objectsMap = [];
+/* ==================== */
+/* === Body Element === */
+/* ==================== */
+var gBody = false;
