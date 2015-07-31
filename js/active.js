@@ -31,7 +31,9 @@ function PlayerMob(x, y, settings) {
     /* Start coordinates */
     this.x = x;
     this.y = y;
-    objectsMap[this.y][this.x] = true;
+    globalObjectsMap[this.y][this.x] = true;
+    /* Base Game Settings */
+    this.baseGameSettings = JSON.parse(JSON.stringify(this.settings.game));
     /* Direction */
     this.direction = {
         'x' : 0, 
@@ -44,7 +46,7 @@ function PlayerMob(x, y, settings) {
         'y' : y
     }
     /* Current move */
-    this.movement = { 
+    this.movement = {
         'x' : 0, 
         'y' : 0, 
         'first' : true 
@@ -54,8 +56,8 @@ function PlayerMob(x, y, settings) {
     /* Create html element */
     this.element = document.createElement('div');
     /* --- */
-    this.element.style.left = ((this.x * tile.x) + this.settings.offset.x) + 'px';
-    this.element.style.top = ((this.y * tile.y) + this.settings.offset.y) + 'px';
+    this.element.style.left = ((this.x * globalTileSize.x) + this.settings.offset.x) + 'px';
+    this.element.style.top = ((this.y * globalTileSize.y) + this.settings.offset.y) + 'px';
     this.element.style['width'] = this.settings.size.x + 'px';
     this.element.style['height'] = this.settings.size.y + 'px';
     this.element.style['background-image'] = 'url(' + this.settings.image + ')';
@@ -68,12 +70,13 @@ function PlayerMob(x, y, settings) {
     this.action = function() {
         if (this.settings.game.hp > 0) {
             var allowAttack = false;
+            /* --- */
             if ((this.movement.x == 0)
             && (this.movement.y == 0)) {
-                if (distance(this.x, this.y, active[playerId].x, active[playerId].y) < activateDistance) {
+                if (distance(this.x, this.y, globalActive[globalPlayerId].x, globalActive[globalPlayerId].y) < MAX_ACTIVATE_DISTANCE) {
                     if (this.targetMobId !== false) {
-                        this.target.x = active[this.targetMobId].x;
-                        this.target.y = active[this.targetMobId].y;
+                        this.target.x = globalActive[this.targetMobId].x;
+                        this.target.y = globalActive[this.targetMobId].y;
                     }
                     var newMove = easyPathFinder(this.x, this.y, this.target.x, this.target.y);
                     if (newMove === false) {
@@ -81,7 +84,7 @@ function PlayerMob(x, y, settings) {
                     }
                     else if ((this.targetMobId !== false)
                     && (distance(this.x, this.y, this.target.x, this.target.y) <= this.settings.game.attack.radius)) {
-                        if (active[this.targetMobId].settings.game.hp > 0) {
+                        if (globalActive[this.targetMobId].settings.game.hp > 0) {
                             this.setDirection(newMove.x, newMove.y);
                             allowAttack = true;
                         }
@@ -94,17 +97,23 @@ function PlayerMob(x, y, settings) {
                         newMove = { 'x' : 0, 'y' : 0 }
                     }
                     if (allowAttack) { this.attack(); }
-                    else if (!objectsMap[this.y + newMove.y][this.x + newMove.x]) { 
+                    else if (!globalObjectsMap[this.y + newMove.y][this.x + newMove.x]) { 
                         this.setMovement(newMove.x, newMove.y); 
                     }
                 }
             }
+            /* --- */
             this.move();
+            /* --- */
+            if (this.settings.game.hp != this.baseGameSettings.hp) {
+                globalPlayerPanel.setHP(Math.round((this.settings.game.hp / this.baseGameSettings.hp) * 100));
+            }
         }
         else if (!this.dead) {
-            objectsMap[this.y][this.x] = false;
-            this.element.style.left = ((this.x * tile.x) + this.settings.corpse.offset.x) + 'px';
-            this.element.style.top = ((this.y * tile.y) + this.settings.corpse.offset.y) + 'px';
+            globalPlayerPanel.setHP(0);
+            globalObjectsMap[this.y][this.x] = false;
+            this.element.style.left = ((this.x * globalTileSize.x) + this.settings.corpse.offset.x) + 'px';
+            this.element.style.top = ((this.y * globalTileSize.y) + this.settings.corpse.offset.y) + 'px';
             this.element.style['width'] = this.settings.corpse.size.x + 'px';
             this.element.style['height'] = this.settings.corpse.size.y + 'px';
             this.element.style['background-position-x'] = this.settings.corpse.sprite.x + 'px';
@@ -120,19 +129,19 @@ function PlayerMob(x, y, settings) {
         if ((this.movement.x != 0)
         || (this.movement.y != 0)) {
             if (this.movement.first) {
-                objectsMap[this.y][this.x] = false;
+                globalObjectsMap[this.y][this.x] = false;
                 this.x += this.movement.x;
                 this.y += this.movement.y;
-                objectsMap[this.y][this.x] = true;
+                globalObjectsMap[this.y][this.x] = true;
                 this.movement.first = false;
                 if (this.movement.y == 1) { this.element.style['z-index'] = this.y; }
                 hideTop();
             }
-            var visualX = (this.x * tile.x) + this.settings.offset.x;
-            var visualY = (this.y * tile.y) + this.settings.offset.y;
+            var visualX = (this.x * globalTileSize.x) + this.settings.offset.x;
+            var visualY = (this.y * globalTileSize.y) + this.settings.offset.y;
             if (this.animation.length) {
-                visualX -= this.movement.x * ((tile.x / (this.settings.sprites.move.length)) * (this.animation.length - 1));
-                visualY -= this.movement.y * ((tile.y / (this.settings.sprites.move.length)) * (this.animation.length - 1));
+                visualX -= this.movement.x * ((globalTileSize.x / (this.settings.sprites.move.length)) * (this.animation.length - 1));
+                visualY -= this.movement.y * ((globalTileSize.y / (this.settings.sprites.move.length)) * (this.animation.length - 1));
             }
             this.element.style.left = visualX + 'px';
             this.element.style.top = visualY + 'px';
@@ -158,7 +167,7 @@ function PlayerMob(x, y, settings) {
         this.element.style['background-position-x'] = this.animation.pop() + 'px';
         /* Last step */
         if (!this.animation.length) {
-            active[this.targetMobId].settings.game.hp -= this.settings.game.attack.damage;
+            globalActive[this.targetMobId].settings.game.hp -= this.settings.game.attack.damage;
             this.attack.first = true;
         }
     }
@@ -221,7 +230,7 @@ function AggressiveMob(x, y, settings) {
     /* Start coordinates */
     this.x = x;
     this.y = y;
-    objectsMap[this.y][this.x] = true;
+    globalObjectsMap[this.y][this.x] = true;
     /* Dead */
     this.dead = false;
     /* Direction */
@@ -246,8 +255,8 @@ function AggressiveMob(x, y, settings) {
     /* Create html element */
     this.element = document.createElement('div');
     /* --- */
-    this.element.style.left = ((this.x * tile.x) + this.settings.offset.x) + 'px';
-    this.element.style.top = ((this.y * tile.y) + this.settings.offset.y) + 'px';
+    this.element.style.left = ((this.x * globalTileSize.x) + this.settings.offset.x) + 'px';
+    this.element.style.top = ((this.y * globalTileSize.y) + this.settings.offset.y) + 'px';
     this.element.style['width'] = this.settings.size.x + 'px';
     this.element.style['height'] = this.settings.size.y + 'px';
     this.element.style['background-image'] = 'url(' + this.settings.image + ')';
@@ -262,11 +271,11 @@ function AggressiveMob(x, y, settings) {
             var allowAttack = false;
             if ((this.movement.x == 0)
             && (this.movement.y == 0)) {
-                if (distance(this.x, this.y, active[playerId].x, active[playerId].y) < activateDistance) {
-                    this.targetMobId = playerId;
+                if (distance(this.x, this.y, globalActive[globalPlayerId].x, globalActive[globalPlayerId].y) < MAX_ACTIVATE_DISTANCE) {
+                    this.targetMobId = globalPlayerId;
                     if (this.targetMobId !== false) {
-                        this.target.x = active[this.targetMobId].x;
-                        this.target.y = active[this.targetMobId].y;
+                        this.target.x = globalActive[this.targetMobId].x;
+                        this.target.y = globalActive[this.targetMobId].y;
                     }
                     var newMove = easyPathFinder(this.x, this.y, this.target.x, this.target.y);
                     if (newMove === false) {
@@ -274,7 +283,7 @@ function AggressiveMob(x, y, settings) {
                     }
                     else if ((this.targetMobId !== false)
                     && (distance(this.x, this.y, this.target.x, this.target.y) <= this.settings.game.attack.radius)) {
-                        if (active[this.targetMobId].settings.game.hp > 0) {
+                        if (globalActive[this.targetMobId].settings.game.hp > 0) {
                             this.setDirection(newMove.x, newMove.y);
                             allowAttack = true;
                         }
@@ -288,7 +297,7 @@ function AggressiveMob(x, y, settings) {
                     }
                     var allowMovement = true;
                     if (allowAttack) { this.attack(); }
-                    else if (!objectsMap[this.y + newMove.y][this.x + newMove.x]) { 
+                    else if (!globalObjectsMap[this.y + newMove.y][this.x + newMove.x]) { 
                         this.setMovement(newMove.x, newMove.y); 
                     }
                 }
@@ -296,9 +305,9 @@ function AggressiveMob(x, y, settings) {
             this.move();
         }
         else if (!this.dead) {
-            objectsMap[this.y][this.x] = false;
-            this.element.style.left = ((this.x * tile.x) + this.settings.corpse.offset.x) + 'px';
-            this.element.style.top = ((this.y * tile.y) + this.settings.corpse.offset.y) + 'px';
+            globalObjectsMap[this.y][this.x] = false;
+            this.element.style.left = ((this.x * globalTileSize.x) + this.settings.corpse.offset.x) + 'px';
+            this.element.style.top = ((this.y * globalTileSize.y) + this.settings.corpse.offset.y) + 'px';
             this.element.style['width'] = this.settings.corpse.size.x + 'px';
             this.element.style['height'] = this.settings.corpse.size.y + 'px';
             this.element.style['background-position-x'] = this.settings.corpse.sprite.x + 'px';
@@ -314,18 +323,18 @@ function AggressiveMob(x, y, settings) {
         if ((this.movement.x != 0)
         || (this.movement.y != 0)) {
             if (this.movement.first) {
-                objectsMap[this.y][this.x] = false;
+                globalObjectsMap[this.y][this.x] = false;
                 this.x += this.movement.x;
                 this.y += this.movement.y;
-                objectsMap[this.y][this.x] = true;
+                globalObjectsMap[this.y][this.x] = true;
                 this.movement.first = false;
                 if (this.movement.y == 1) { this.element.style['z-index'] = this.y; }
             }
-            var visualX = (this.x * tile.x) + this.settings.offset.x;
-            var visualY = (this.y * tile.y) + this.settings.offset.y;
+            var visualX = (this.x * globalTileSize.x) + this.settings.offset.x;
+            var visualY = (this.y * globalTileSize.y) + this.settings.offset.y;
             if (this.animation.length) {
-                visualX -= this.movement.x * ((tile.x / (this.settings.sprites.move.length)) * (this.animation.length - 1));
-                visualY -= this.movement.y * ((tile.y / (this.settings.sprites.move.length)) * (this.animation.length - 1));
+                visualX -= this.movement.x * ((globalTileSize.x / (this.settings.sprites.move.length)) * (this.animation.length - 1));
+                visualY -= this.movement.y * ((globalTileSize.y / (this.settings.sprites.move.length)) * (this.animation.length - 1));
             }
             this.element.style.left = visualX + 'px';
             this.element.style.top = visualY + 'px';
@@ -351,7 +360,7 @@ function AggressiveMob(x, y, settings) {
         this.element.style['background-position-x'] = this.animation.pop() + 'px';
         /* Last step */
         if (!this.animation.length) {
-            active[this.targetMobId].settings.game.hp -= this.settings.game.attack.damage;
+            globalActive[this.targetMobId].settings.game.hp -= this.settings.game.attack.damage;
             this.attack.first = true;
         }
     }

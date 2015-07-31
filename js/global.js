@@ -1,37 +1,37 @@
 /* ================= */
 /* === Constants === */
 /* ================= */
-var activateDistance = 12;
-var maxPathDistance = 32;
+var MAX_ACTIVATE_DISTANCE = 12;
+var MAX_PATH_DISTANCE = 32;
 /* ================= */
 /* === Player Id === */
 /* ================= */
-var playerId = 0;
-/* ============ */
-/* === Tile === */
-/* ============ */
-var tile = {
-    'x' : 60,
-    'y' : 40
+var globalPlayerId = 0;
+/* ================= */
+/* === Tile Size === */
+/* ================= */
+var globalTileSize = {
+    "x" : 60,
+    "y" : 40
 }
 /* ============ */
 /* === Data === */
 /* ============ */
-var data = {
-    'ground' : false,
-    'active' : false,
-    'static' : false,
-    'top' : false,
-    'events' : false
+var globalData = {
+    "ground" : false,
+    "active" : false,
+    "static" : false,
+    "top" : false,
+    "events" : false
 }
 /* =========== */
 /* === Map === */
 /* =========== */
-var map = false;
+var globalMap = false;
 /* =================== */
 /* === Objects Map === */
 /* =================== */
-var objectsMap = [];
+var globalObjectsMap = [];
 /* ==================== */
 /* === Body Element === */
 /* ==================== */
@@ -39,27 +39,31 @@ var globalBody = false;
 /* ========================= */
 /* === Objects Container === */
 /* ========================= */
-var objects = false;
-/* ============== */
-/* === Ground === */
-/* ============== */
-var ground = {
-    'element' : false, 
-    'context' : false 
+var globalObjectsContainer = false;
+/* ======================== */
+/* === Ground Container === */
+/* ======================== */
+var globalGroundContainer = {
+    "element" : false, 
+    "context" : false 
 }
-/* =================== */
-/* === Top Objects === */
-/* =================== */
-var topObjects = [];
-/* ====================== */
-/* === Active Objects === */
-/* ====================== */
-var active = [];
 /* ================= */
 /* === Container === */
 /* ================= */
-var container = {
-    'element' : false,
-    'x' : 0,
-    'y' : 0
+var globalPlayerPanel = false;
+/* =================== */
+/* === Top Objects === */
+/* =================== */
+var globalTop = [];
+/* ====================== */
+/* === Active Objects === */
+/* ====================== */
+var globalActive = [];
+/* ================= */
+/* === Container === */
+/* ================= */
+var globalContainer = {
+    "element" : false,
+    "x" : 0,
+    "y" : 0
 }

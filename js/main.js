@@ -1,9 +1,10 @@
 function ready() {
-    container.element = document.querySelector('#container');
-    ground.element = document.querySelector('#ground-map');
-    ground.context = ground.element.getContext('2d');
-    objects = document.querySelector('#objects-map');
+    globalContainer.element = document.querySelector('#container');
+    globalGroundContainer.element = document.querySelector('#ground-map');
+    globalGroundContainer.context = globalGroundContainer.element.getContext('2d');
+    globalObjectsContainer = document.querySelector('#objects-map');
     globalBody = document.querySelector('body');
+    globalPlayerPanel = new PlayerPanelClass();
     /* --- */
     loadData(4);
     loadMap(4);
@@ -13,7 +14,7 @@ function ready() {
     /* --- Main Animation Loop --- */
     /* --------------------------- */
     function animation() {
-        for (id in active) { active[id].action(); }
+        for (id in globalActive) { globalActive[id].action(); }
         setContainerPosition();
         /* --- */
         setTimeout(function() {
@@ -24,40 +25,40 @@ function ready() {
     /* -------------------------- */
     /* --- Set Players Tatget --- */
     /* -------------------------- */
-    container.element.addEventListener('click', function(event) {
-        var x = Math.round((event.offsetX / tile.x) - 0.5);
-        var y = Math.round((event.offsetY / tile.y) - 0.5);
+    globalContainer.element.addEventListener('click', function(event) {
+        var x = Math.round((event.offsetX / globalTileSize.x) - 0.5);
+        var y = Math.round((event.offsetY / globalTileSize.y) - 0.5);
         /* --- */
-        if (event.target != ground.element) {
-            x = Math.round(((event.target.offsetLeft + event.offsetX) / tile.x) - 0.5);
-            y = Math.round(((event.target.offsetTop + event.offsetY) / tile.y) - 0.5);
+        if (event.target != globalGroundContainer.element) {
+            x = Math.round(((event.target.offsetLeft + event.offsetX) / globalTileSize.x) - 0.5);
+            y = Math.round(((event.target.offsetTop + event.offsetY) / globalTileSize.y) - 0.5);
         }
         /* --- */
-        if (x >= map.size.x) { x = map.size.x - 1; }
-        if (y >= map.size.y) { y = map.size.y - 1; }
+        if (x >= globalMap.size.x) { x = globalMap.size.x - 1; }
+        if (y >= globalMap.size.y) { y = globalMap.size.y - 1; }
         /* --- */
         var targetIsGround = true;
-        if (event.target != ground.element) {
-            for (id in active) {
-                var mapOffsetX = Math.round(active[id].settings.offset.x / tile.x);
-                var mapOffsetY = Math.round(active[id].settings.offset.y / tile.y);
+        if (event.target != globalGroundContainer.element) {
+            for (id in globalActive) {
+                var mapOffsetX = Math.round(globalActive[id].settings.offset.x / globalTileSize.x);
+                var mapOffsetY = Math.round(globalActive[id].settings.offset.y / globalTileSize.y);
                 /* --- */
-                if ((x >= active[id].x + mapOffsetX)
-                && (y >= active[id].y + mapOffsetY)
-                && (x < active[id].x + mapOffsetX + Math.round(active[id].settings.size.x / tile.x))
-                && (y < active[id].y + mapOffsetY + Math.round(active[id].settings.size.y / tile.y))
-                && (id != playerId)
-                && (!active[id].dead)) { 
-                    active[playerId].targetMobId = id;
+                if ((x >= globalActive[id].x + mapOffsetX)
+                && (y >= globalActive[id].y + mapOffsetY)
+                && (x < globalActive[id].x + mapOffsetX + Math.round(globalActive[id].settings.size.x / globalTileSize.x))
+                && (y < globalActive[id].y + mapOffsetY + Math.round(globalActive[id].settings.size.y / globalTileSize.y))
+                && (id != globalPlayerId)
+                && (!globalActive[id].dead)) { 
+                    globalActive[globalPlayerId].targetMobId = id;
                     targetIsGround = false;
                 }
             }
         }
         /* --- */
         if (targetIsGround) {
-            active[playerId].targetMobId = false;
-            active[playerId].target.x = x;
-            active[playerId].target.y = y;
+            globalActive[globalPlayerId].targetMobId = false;
+            globalActive[globalPlayerId].target.x = x;
+            globalActive[globalPlayerId].target.y = y;
         }
     });
 }

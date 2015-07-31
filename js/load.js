@@ -9,7 +9,7 @@ function loadData(dataId) {
     request.open('GET', 'data/' + dataId + '/ground.json', false);
     request.send();
     if (request.status == 200) {
-        data.ground = JSON.parse(request.responseText);
+        globalData.ground = JSON.parse(request.responseText);
     }
     /* --------------------------- */
     /* --- Load Active Objects --- */
@@ -17,7 +17,7 @@ function loadData(dataId) {
     request.open('GET', 'data/' + dataId + '/active.json', false);
     request.send();
     if (request.status == 200) { 
-        data.active = JSON.parse(request.responseText);
+        globalData.active = JSON.parse(request.responseText);
     }
     /* --------------------------- */
     /* --- Load Static Objects --- */
@@ -25,7 +25,7 @@ function loadData(dataId) {
     request.open('GET', 'data/' + dataId + '/static.json', false);
     request.send();
     if (request.status == 200) { 
-        data.static = JSON.parse(request.responseText);
+        globalData.static = JSON.parse(request.responseText);
     }
     /* ------------------------ */
     /* --- Load Top Objects --- */
@@ -33,7 +33,7 @@ function loadData(dataId) {
     request.open('GET', 'data/' + dataId + '/top.json', false);
     request.send();
     if (request.status == 200) {
-        data.top = JSON.parse(request.responseText);
+        globalData.top = JSON.parse(request.responseText);
     }
     /* ------------------- */
     /* --- Load Events --- */
@@ -41,7 +41,7 @@ function loadData(dataId) {
     request.open('GET', 'data/' + dataId + '/events.json', false);
     request.send();
     if (request.status == 200) {
-        data.events = JSON.parse(request.responseText);
+        globalData.events = JSON.parse(request.responseText);
     }
 }
 /* ================ */
@@ -53,15 +53,15 @@ function loadMap(dataId) {
     request.send();
 
     if (request.status == 200) {
-        map = JSON.parse(request.responseText);
+        globalMap = JSON.parse(request.responseText);
 
-        objectsMap = [];
-        for (var y = 0; y < map.size.y; y++) {
-            objectsMap[y] = [];
-            for (var x = 0; x < map.size.x; x++) {
-                if (map.layers.wall[y][x] == 1) { map.layers.wall[y][x] = true; }
-                else { map.layers.wall[y][x] = false; }
-                objectsMap[y][x] = false;
+        globalObjectsMap = [];
+        for (var y = 0; y < globalMap.size.y; y++) {
+            globalObjectsMap[y] = [];
+            for (var x = 0; x < globalMap.size.x; x++) {
+                if (globalMap.layers.wall[y][x] == 1) { globalMap.layers.wall[y][x] = true; }
+                else { globalMap.layers.wall[y][x] = false; }
+                globalObjectsMap[y][x] = false;
             }           
         }
     }

@@ -1,6 +1,6 @@
 function easyPathFinder(x1, y1, x2, y2) {
     if (((x1 == x2) && (y1 == y2))
-    || (map.layers.wall[y2][x2])) { 
+    || (globalMap.layers.wall[y2][x2])) { 
         return { 'x' : 0, 'y' : 0 }
     }
     var dX = Math.abs(x2 - x1);
@@ -15,8 +15,8 @@ function easyPathFinder(x1, y1, x2, y2) {
                     return result;
                 }
                 else if (x != x1) {
-                    if ((map.layers.wall[Math.round(y)][x]) 
-                    || (objectsMap[Math.round(y)][x])) { return false; }
+                    if ((globalMap.layers.wall[Math.round(y)][x]) 
+                    || (globalObjectsMap[Math.round(y)][x])) { return false; }
                     else if (x == x1 + 1) { result = { 'x' : 1, 'y' : Math.round(y - y1) } }
                 }
                 if (y1 < y2) { y += dY / dX; }
@@ -30,8 +30,8 @@ function easyPathFinder(x1, y1, x2, y2) {
                     return result; 
                 }
                 else if (x != x1) {
-                    if ((map.layers.wall[Math.round(y)][x]) 
-                    || (objectsMap[Math.round(y)][x])) { return false; }
+                    if ((globalMap.layers.wall[Math.round(y)][x]) 
+                    || (globalObjectsMap[Math.round(y)][x])) { return false; }
                     else if (x == x1 - 1) { result = { 'x' : -1, 'y' : Math.round(y - y1) } }
                 }
                 if (y1 < y2) { y += dY / dX; }
@@ -48,8 +48,8 @@ function easyPathFinder(x1, y1, x2, y2) {
                     return result; 
                 }
                 else if (y != y1) {
-                    if ((map.layers.wall[y][Math.round(x)]) 
-                    || (objectsMap[y][Math.round(x)])) { return false; }
+                    if ((globalMap.layers.wall[y][Math.round(x)]) 
+                    || (globalObjectsMap[y][Math.round(x)])) { return false; }
                     else if (y == y1 + 1) { result = { 'x' : Math.round(x - x1), 'y' : 1 } }
                 }
                 if (x1 < x2) { x += dX / dY; }
@@ -63,8 +63,8 @@ function easyPathFinder(x1, y1, x2, y2) {
                     return result; 
                 }
                 else if (y != y1) {
-                    if ((map.layers.wall[y][Math.round(x)]) 
-                    || (objectsMap[y][Math.round(x)])) { return false; }
+                    if ((globalMap.layers.wall[y][Math.round(x)]) 
+                    || (globalObjectsMap[y][Math.round(x)])) { return false; }
                     else if (y == y1 - 1) { result = { 'x' : Math.round(x - x1), 'y' : -1 } }
                 }
                 if (x1 < x2) { x += dX / dY; }
@@ -79,9 +79,9 @@ function finder(start, end) {
 
     var finderMap = [];
 
-    for (var y = 0; y < map.size.y; y++) {
+    for (var y = 0; y < globalMap.size.y; y++) {
         finderMap[y] = [];
-        for (var x = 0; x < map.size.x; x++) {
+        for (var x = 0; x < globalMap.size.x; x++) {
             finderMap[y][x] = 0;
         }           
     }
@@ -98,16 +98,16 @@ function finder(start, end) {
     while (!success) {
         if (loop.start.x < 0) { loop.start.x = 0; }
         if (loop.start.y < 0) { loop.start.y = 0; }
-        if (loop.end.x >= map.size.x) { loop.end.x = map.size.x - 1; }
-        if (loop.end.y >= map.size.y) { loop.end.y = map.size.y - 1; }
+        if (loop.end.x >= globalMap.size.x) { loop.end.x = globalMap.size.x - 1; }
+        if (loop.end.y >= globalMap.size.y) { loop.end.y = globalMap.size.y - 1; }
         if (endPath) { success = true; }
         var noPath = true;
         for (var y = loop.start.y; y <= loop.end.y; y++) {
             for (var x = loop.start.x; x <= loop.end.x; x++) {
-                if ((finderMap[y][x] != 0) && (!map.layers.wall[y][x])) {
+                if ((finderMap[y][x] != 0) && (!globalMap.layers.wall[y][x])) {
                     if ((x - 1 >= 0)
-                    && (!map.layers.wall[y][x - 1])
-                    && ((!objectsMap[y][x - 1])
+                    && (!globalMap.layers.wall[y][x - 1])
+                    && ((!globalObjectsMap[y][x - 1])
                     || ((x - 1 == end.x) && (y == end.y)))
                     && ((finderMap[y][x - 1] == 0)
                     || (finderMap[y][x - 1] > finderMap[y][x] + 1))) {
@@ -116,8 +116,8 @@ function finder(start, end) {
                     }
 
                     if ((y - 1 >= 0)
-                    && (!map.layers.wall[y - 1][x])
-                    && ((!objectsMap[y - 1][x])
+                    && (!globalMap.layers.wall[y - 1][x])
+                    && ((!globalObjectsMap[y - 1][x])
                     || ((x == end.x) && (y - 1 == end.y)))
                     && ((finderMap[y - 1][x] == 0)
                     || (finderMap[y - 1][x] > finderMap[y][x] + 1))) {
@@ -125,9 +125,9 @@ function finder(start, end) {
                         noPath = false;
                     }
 
-                    if ((x + 1 < map.size.x)
-                    && (!map.layers.wall[y][x + 1])
-                    && ((!objectsMap[y][x + 1])
+                    if ((x + 1 < globalMap.size.x)
+                    && (!globalMap.layers.wall[y][x + 1])
+                    && ((!globalObjectsMap[y][x + 1])
                     || ((x + 1 == end.x) && (y == end.y)))
                     && ((finderMap[y][x + 1] == 0)
                     || (finderMap[y][x + 1] > finderMap[y][x] + 1))) {
@@ -135,9 +135,9 @@ function finder(start, end) {
                         noPath = false;
                     }
 
-                    if ((y + 1 < map.size.y) 
-                    && (!map.layers.wall[y + 1][x])
-                    && ((!objectsMap[y + 1][x])
+                    if ((y + 1 < globalMap.size.y) 
+                    && (!globalMap.layers.wall[y + 1][x])
+                    && ((!globalObjectsMap[y + 1][x])
                     || ((x == end.x) && (y + 1 == end.y)))
                     && ((finderMap[y + 1][x] == 0)
                     || (finderMap[y + 1][x] > finderMap[y][x] + 1))) {
@@ -147,8 +147,8 @@ function finder(start, end) {
 
                     if ((x - 1 >= 0)
                     && (y - 1 >= 0)
-                    && (!map.layers.wall[y - 1][x - 1])
-                    && ((!objectsMap[y - 1][x - 1])
+                    && (!globalMap.layers.wall[y - 1][x - 1])
+                    && ((!globalObjectsMap[y - 1][x - 1])
                     || ((x - 1 == end.x) && (y - 1 == end.y)))
                     && ((finderMap[y - 1][x - 1] == 0)
                     || (finderMap[y - 1][x - 1] > finderMap[y][x] + 1))) {
@@ -156,10 +156,10 @@ function finder(start, end) {
                         noPath = false;
                     }
 
-                    if ((x + 1 < map.size.x)
-                    && (y + 1 < map.size.y)
-                    && (!map.layers.wall[y + 1][x + 1])
-                    && ((!objectsMap[y + 1][x + 1])
+                    if ((x + 1 < globalMap.size.x)
+                    && (y + 1 < globalMap.size.y)
+                    && (!globalMap.layers.wall[y + 1][x + 1])
+                    && ((!globalObjectsMap[y + 1][x + 1])
                     || ((x + 1 == end.x) && (y + 1 == end.y)))
                     && ((finderMap[y + 1][x + 1] == 0)
                     || (finderMap[y + 1][x + 1] > finderMap[y][x] + 1))) {
@@ -168,9 +168,9 @@ function finder(start, end) {
                     }
 
                     if ((x - 1 >= 0)
-                    && (y + 1 < map.size.y)
-                    && (!map.layers.wall[y + 1][x - 1])
-                    && ((!objectsMap[y + 1][x - 1])
+                    && (y + 1 < globalMap.size.y)
+                    && (!globalMap.layers.wall[y + 1][x - 1])
+                    && ((!globalObjectsMap[y + 1][x - 1])
                     || ((x - 1 == end.x) && (y + 1 == end.y)))
                     && ((finderMap[y + 1][x - 1] == 0)
                     || (finderMap[y + 1][x - 1] > finderMap[y][x] + 1))) {
@@ -178,17 +178,17 @@ function finder(start, end) {
                         noPath = false;
                     }
 
-                    if ((x + 1 < map.size.x)
+                    if ((x + 1 < globalMap.size.x)
                     && (y - 1 >= 0)
-                    && (!map.layers.wall[y - 1][x + 1])
-                    && ((!objectsMap[y - 1][x + 1])
+                    && (!globalMap.layers.wall[y - 1][x + 1])
+                    && ((!globalObjectsMap[y - 1][x + 1])
                     || ((x + 1 == end.x) && (y - 1 == end.y)))
                     && ((finderMap[y - 1][x + 1] == 0)
                     || (finderMap[y - 1][x + 1] > finderMap[y][x] + 1))) {
                         finderMap[y - 1][x + 1] = finderMap[y][x] + 1;
                         noPath = false;
                     }
-                    if (finderMap[y][x] > maxPathDistance) { noPath = true; } 
+                    if (finderMap[y][x] > MAX_PATH_DISTANCE) { noPath = true; } 
                     if ((x == end.x) && (y == end.y)) { endPath = true; }
                 }
             }
@@ -217,11 +217,11 @@ function finder(start, end) {
         && (finderMap[current.y][current.x - 1] == finderMap[current.y][current.x] - 1)) {
             current.x = current.x - 1;
         }
-        else if ((current.y + 1 < map.size.y)
+        else if ((current.y + 1 < globalMap.size.y)
         && (finderMap[current.y + 1][current.x] == finderMap[current.y][current.x] - 1)) {
             current.y = current.y + 1;
         }
-        else if ((current.x + 1 < map.size.x)
+        else if ((current.x + 1 < globalMap.size.x)
         && (finderMap[current.y][current.x + 1] == finderMap[current.y][current.x] - 1)) {
             current.x = current.x + 1;
         }
@@ -231,19 +231,19 @@ function finder(start, end) {
             current.y = current.y - 1;
             current.x = current.x - 1;
         }
-        else if ((current.y + 1 < map.size.y)
-        && (current.x + 1 < map.size.x)
+        else if ((current.y + 1 < globalMap.size.y)
+        && (current.x + 1 < globalMap.size.x)
         && (finderMap[current.y + 1][current.x + 1] == finderMap[current.y][current.x] - 1)) {
             current.y = current.y + 1;
             current.x = current.x + 1;
         }
         else if ((current.y - 1 >= 0)
-        && (current.x + 1 < map.size.x)
+        && (current.x + 1 < globalMap.size.x)
         && (finderMap[current.y - 1][current.x + 1] == finderMap[current.y][current.x] - 1)) {
             current.y = current.y - 1;
             current.x = current.x + 1;
         }
-        else if ((current.y + 1 < map.size.y)
+        else if ((current.y + 1 < globalMap.size.y)
         && (current.x - 1 >= 0)
         && (finderMap[current.y + 1][current.x - 1] == finderMap[current.y][current.x] - 1)) {
             current.y = current.y + 1;
