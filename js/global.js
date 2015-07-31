@@ -3,10 +3,19 @@
 /* ================= */
 var MAX_ACTIVATE_DISTANCE = 12;
 var MAX_PATH_DISTANCE = 32;
+var MAX_INTERACTION_DISTANCE = 2;
 /* ================= */
 /* === Player Id === */
 /* ================= */
 var globalPlayerId = 0;
+/* ====================== */
+/* === Alow Interface === */
+/* ====================== */
+var globalAllowInterface = true;
+/* ====================== */
+/* === Current Dialog === */
+/* ====================== */
+var globalCurrentDialog = false;
 /* ================= */
 /* === Tile Size === */
 /* ================= */
@@ -22,7 +31,8 @@ var globalData = {
     "active" : false,
     "static" : false,
     "top" : false,
-    "events" : false
+    "events" : false,
+    "dialogs" : false
 }
 /* =========== */
 /* === Map === */

@@ -43,6 +43,14 @@ function loadData(dataId) {
     if (request.status == 200) {
         globalData.events = JSON.parse(request.responseText);
     }
+    /* ------------------- */
+    /* --- Load Dialogs --- */
+    /* ------------------- */
+    request.open('GET', 'data/' + dataId + '/dialogs.json', false);
+    request.send();
+    if (request.status == 200) {
+        globalData.dialogs = JSON.parse(request.responseText);
+    }
 }
 /* ================ */
 /* === Load Map === */

@@ -1,11 +1,11 @@
 {
     "player-1" : {
-        "type" : "player",
+        "type" : "mob.player",
         "size" : { "x" : 60, "y" : 120 },
         "offset" : { "x" : 0, "y" : -80 },
         "image" : "images/sprites/h5.png",
         "sprites" : {
-            "direction" : [0, 0, 120, 120, 0, 0, 60, 60],
+            "direction" : [0, -120, -240, -360, -480, -600, -720, -840],
             "move" : [0, 0, -120, -120, 0, 0, -60, -60],
             "attack" : [-240, -180, -240, -180, -240, -180, -240, -180]
         },
@@ -27,12 +27,12 @@
         }
     },
     "aggressive-mob-1" : {
-        "type" : "aggressive-mob",
+        "type" : "mob.aggressive",
         "size" : { "x" : 60, "y" : 120 },
         "offset" : { "x" : 0, "y" : -80 },
         "image" : "images/sprites/h4.png",
         "sprites" : {
-            "direction" : [0, 0, 120, 120, 0, 0, 60, 60],
+            "direction" : [0, -120, -240, -360, -480, -600, -720, -840],
             "move" : [0, 0, -120, -120, 0, 0, -60, -60],
             "attack" : [-240, -180, -240, -180, -240, -180, -240, -180]
         },
@@ -54,12 +54,12 @@
         }
     },
     "aggressive-mob-2" : {
-        "type" : "aggressive-mob",
+        "type" : "mob.aggressive",
         "size" : { "x" : 60, "y" : 120 },
         "offset" : { "x" : 0, "y" : -80 },
         "image" : "images/sprites/h5.png",
         "sprites" : {
-            "direction" : [0, 0, 120, 120, 0, 0, 60, 60],
+            "direction" : [0, -120, -240, -360, -480, -600, -720, -840],
             "move" : [0, 0, -120, -120, 0, 0, -60, -60],
             "attack" : [-240, -180, -240, -180, -240, -180, -240, -180]
         },
@@ -78,6 +78,23 @@
         "labels" : {
             "name" : "Mob",
             "editor" : "Aggressive mob 2"
+        }
+    },
+    "friendly-mob-2" : {
+        "type" : "mob.friendly",
+        "size" : { "x" : 60, "y" : 120 },
+        "offset" : { "x" : 0, "y" : -80 },
+        "image" : "images/sprites/h5.png",
+        "sprites" : {
+            "direction" : [0, -120, -240, -360, -480, -600, -720, -840],
+            "move" : [0, 0, -120, -120, 0, 0, -60, -60]
+        },
+        "game" : {
+            "dialog" : "d1"
+        },
+        "labels" : {
+            "name" : "Mob",
+            "editor" : "Friendly mob 1"
         }
     }
 }

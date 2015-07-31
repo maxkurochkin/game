@@ -83,12 +83,15 @@ function renderMap() {
     for (var id in globalMap.layers.active) {
         var object = globalMap.layers.active[id];
         var settings = JSON.parse(JSON.stringify(globalData.active[object[0]]));
-        if (settings.type == 'aggressive-mob') {
-            globalActive.push(new AggressiveMob(object[1], object[2], settings));
+        if (settings.type == 'mob.aggressive') {
+            globalActive.push(new AggressiveMobClass(object[1], object[2], settings));
         }
-        else if (settings.type == 'player') {
+        else if (settings.type == 'mob.friendly') {
+            globalActive.push(new FriendlyMobClass(object[1], object[2], settings));
+        }
+        else if (settings.type == 'mob.player') {
             globalPlayerId = globalActive.length;
-            globalActive.push(new PlayerMob(object[1], object[2], settings));
+            globalActive.push(new PlayerMobClass(object[1], object[2], settings));
         }
     }
     /* ----------------------------- */

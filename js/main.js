@@ -48,8 +48,8 @@ function ready() {
                 && (x < globalActive[id].x + mapOffsetX + Math.round(globalActive[id].settings.size.x / globalTileSize.x))
                 && (y < globalActive[id].y + mapOffsetY + Math.round(globalActive[id].settings.size.y / globalTileSize.y))
                 && (id != globalPlayerId)
-                && (!globalActive[id].dead)) { 
-                    globalActive[globalPlayerId].targetMobId = id;
+                && (!globalActive[id].dead)) {
+                    globalActive[id].click();
                     targetIsGround = false;
                 }
             }

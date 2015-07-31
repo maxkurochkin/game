@@ -18,20 +18,20 @@ function DialogClass(dialog) {
     this.page = 'start';
     /* --- */
     this.element = document.createElement('div');
-    this.element.setAttribute('class', 'dialog');
+    this.element.setAttribute('class', 'dialog-panel');
     globalBody.appendChild(this.element);
     /* --- */
     this.text = document.createElement('div');
     this.text.setAttribute('class', 'dialog-text');
-    element.appendChild(this.text);
+    this.element.appendChild(this.text);
     /* --- */
     this.answers = document.createElement('div');
     this.answers.setAttribute('class', 'dialog-answers');
-    element.appendChild(this.answers);
+    this.element.appendChild(this.answers);
     /* ------------------- */
     /* --- Show Method --- */
     /* ------------------- */
-    var show = function(page) {
+    this.show = function(page) {
         this.page = page;
         this.text.innerHTML = this.dialog[this.page].text;
         var answers = this.answers.querySelectorAll('span');
@@ -42,17 +42,17 @@ function DialogClass(dialog) {
             var answer = document.createElement('span');
             answer.setAttribute('data-id', id);
             answer.innerHTML = this.dialog[this.page].answers[id].text;
-            answer.addEventListener('click', function() { answer(this.getAttribute('data-id')); });
+            answer.addEventListener('click', function() { globalCurrentDialog.answer(this.getAttribute('data-id')); });
             this.answers.appendChild(answer);
         }
     }
     /* --------------------- */
     /* --- Answer Method --- */
     /* --------------------- */
-    var answer = function(id) {
+    this.answer = function(id) {
         var action = this.dialog[this.page].answers[id].action.split('.');
         if (action[0] == 'dialog') {
-            if (action[1] == 'page') { show(action[2]); }
+            if (action[1] == 'page') { this.show(action[2]); }
             else if (action[1] == 'close') { this.delete(); }
         }
         else { script(this.dialog[this.page].answers[id].action); }
@@ -62,12 +62,15 @@ function DialogClass(dialog) {
     /* --------------------- */
     this.delete = function() {
         globalBody.removeChild(this.element);
+        globalAllowInterface = true;
+        globalCurrentDialog = false;
+        globalActive[globalPlayerId].targetMobId = false;
         delete this;
     }
     /* -------------------- */
     /* --- Start Dialog --- */
     /* -------------------- */
-    show(this.page);
+    this.show(this.page);
 }
 /* ==================== */
 /* === Player Panel === */

@@ -12,6 +12,15 @@
                     "action" : "dialog.close"
                 }
             } 
+        },
+        "p2" : { 
+            "text" : "test text 2",
+            "answers" : {
+                "a1" : {
+                    "text" : "test answer 1",
+                    "action" : "dialog.close"
+                }
+            } 
         }
     }
 }
