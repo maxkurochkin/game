@@ -4,6 +4,7 @@
 var MAX_ACTIVATE_DISTANCE = 12;
 var MAX_PATH_DISTANCE = 32;
 var MAX_INTERACTION_DISTANCE = 2;
+var TARGET_FPS = 40;
 /* ================= */
 /* === Player Id === */
 /* ================= */

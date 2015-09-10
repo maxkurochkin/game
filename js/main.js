@@ -14,13 +14,17 @@ function ready() {
     /* --------------------------- */
     /* --- Main Animation Loop --- */
     /* --------------------------- */
+    var lastAnimationTime = 0;
     function animation() {
-        for (id in globalActive) { globalActive[id].action(); }
-        setContainerPosition();
+        var currentAnimationTime = Date.now();
         /* --- */
-        setTimeout(function() {
-            window.requestAnimationFrame(animation);
-        }, 25);
+        if (currentAnimationTime - lastAnimationTime >= 1000 / TARGET_FPS) {
+            for (id in globalActive) { globalActive[id].action(); }
+            setContainerPosition();
+            lastAnimationTime = currentAnimationTime;
+        }
+        /* --- */
+        window.requestAnimationFrame(animation);
     }
     window.requestAnimationFrame(animation);
     /* -------------------------- */
