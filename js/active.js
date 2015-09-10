@@ -442,7 +442,8 @@ function FriendlyMobClass(x, y, settings) {
                     this.setMovement(newMove.x, newMove.y); 
                 }
                 */
-                this.setMovement(0, 0);
+
+                //this.setMovement(0, 0);
             }
         }
         this.move();
@@ -489,6 +490,9 @@ function FriendlyMobClass(x, y, settings) {
     /* -------------------------- */
     this.interaction = function() {
         if (globalAllowInterface) {
+            var newDirection = easyPathFinder(this.x, this.y, globalActive[globalPlayerId].x, globalActive[globalPlayerId].y);
+            if (newDirection !== false) { this.setDirection(newDirection.x, newDirection.y); }
+            /* --- */
             if (this.settings.game.dialog) {
                 globalCurrentDialog = new DialogClass(globalData.dialogs[this.settings.game.dialog]);
                 globalAllowInterface = false;
@@ -525,7 +529,7 @@ function FriendlyMobClass(x, y, settings) {
         else if ((x == -1) && (y == 0)) { direction = 6; }
         else if ((x == -1) && (y == -1)) { direction = 7; }
         /* --- */
-        this.element.style['background-position-y'] = this.settings.sprites.direction[direction] + 'px'; 
+        this.element.style['background-position-y'] = this.settings.sprites.direction[direction] + 'px';
     }
     /* Set start direction */
     this.setDirection(0, 1);

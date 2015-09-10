@@ -80,6 +80,23 @@
             "editor" : "Aggressive mob 2"
         }
     },
+    "friendly-mob-1" : {
+        "type" : "mob.friendly",
+        "size" : { "x" : 60, "y" : 120 },
+        "offset" : { "x" : 0, "y" : -80 },
+        "image" : "images/sprites/h4.png",
+        "sprites" : {
+            "direction" : [0, -120, -240, -360, -480, -600, -720, -840],
+            "move" : [0, 0, -120, -120, 0, 0, -60, -60]
+        },
+        "game" : {
+            "dialog" : false
+        },
+        "labels" : {
+            "name" : "Mob",
+            "editor" : "Friendly mob 1"
+        }
+    },
     "friendly-mob-2" : {
         "type" : "mob.friendly",
         "size" : { "x" : 60, "y" : 120 },
@@ -94,7 +111,7 @@
         },
         "labels" : {
             "name" : "Mob",
-            "editor" : "Friendly mob 1"
+            "editor" : "Friendly mob 2"
         }
     }
 }
