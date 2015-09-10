@@ -57,9 +57,9 @@ var globalGroundContainer = {
     "element" : false, 
     "context" : false 
 }
-/* ================= */
-/* === Container === */
-/* ================= */
+/* ==================== */
+/* === Player Panel === */
+/* ==================== */
 var globalPlayerPanel = false;
 /* =================== */
 /* === Top Objects === */
@@ -69,6 +69,10 @@ var globalTop = [];
 /* === Active Objects === */
 /* ====================== */
 var globalActive = [];
+/* ======================= */
+/* === Click Container === */
+/* ======================= */
+var globalClickContainer = false;
 /* ================= */
 /* === Container === */
 /* ================= */

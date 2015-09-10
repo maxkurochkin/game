@@ -337,6 +337,7 @@ function AggressiveMobClass(x, y, settings) {
         /* Last step */
         if (!this.animation.length) {
             globalActive[this.targetMobId].settings.game.hp -= this.settings.game.attack.damage;
+            if (!globalActive[globalPlayerId].targetMobId) { this.click(); }
             this.attack.first = true;
         }
     }

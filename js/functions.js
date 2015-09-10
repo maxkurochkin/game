@@ -153,4 +153,6 @@ function renderMap() {
         /* --- */
         globalObjectsContainer.appendChild(element);
     }
+    /* Set Click Container Z */
+    globalClickContainer.style['z-index'] = globalMap.size.y + 1;
 }
