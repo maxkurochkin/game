@@ -67,7 +67,7 @@ function renderMap() {
     var groundImagesLoading = setInterval(function() {
         if (imagesNeed == 0) {
             for (var id in globalMap.layers.ground) {
-                    globalGroundContainer.context.drawImage(
+                globalGroundContainer.context.drawImage(
                     images[globalMap.layers.ground[id][0]],
                     globalMap.layers.ground[id][1] * globalTileSize.x,
                     globalMap.layers.ground[id][2] * globalTileSize.y
