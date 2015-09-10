@@ -162,6 +162,15 @@ function PlayerMobClass(x, y, settings) {
             this.attack.first = true;
         }
     }
+    /* ------------------- */
+    /* --- Has Target Method --- */
+    /* ------------------- */
+    this.hasTarget = function() {
+        if ((this.target.x == this.x)
+        && (this.target.y == this.y)
+        && (!this.targetMobId)) { return false; }
+        return true;
+    }
     /* Set move method */
     this.setMovement = function(x, y) {
         if ((this.movement.x == 0)
@@ -337,7 +346,7 @@ function AggressiveMobClass(x, y, settings) {
         /* Last step */
         if (!this.animation.length) {
             globalActive[this.targetMobId].settings.game.hp -= this.settings.game.attack.damage;
-            if (!globalActive[globalPlayerId].targetMobId) { this.click(); }
+            if (!globalActive[globalPlayerId].hasTarget()) { this.click(); }
             this.attack.first = true;
         }
     }
